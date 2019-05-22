@@ -161,6 +161,7 @@ public class CraiglistRentalService {
 					p.setSoldDate(new Date());
 					p.setNumberDays(daysBetween.getDays());
 					dao.updateRentDate(p);
+					System.out.println(p.getId()+" property updated to RENTED!");
 				}
 				else if(crawler.isFlagged()) {
 					System.out.println(p.getId()+" property flagged to remove!");
