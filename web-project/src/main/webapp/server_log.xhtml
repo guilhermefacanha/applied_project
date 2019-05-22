@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="breadcrumb">
+		<li><p:link outcome="/empty">Empty</p:link></li>
+	</ui:define>
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{serverLogBean.initServerLog}" />
+		</f:metadata>
+		<style type="text/css">
+.ui-scrollpanel p {
+	width: 100%;
+	font-size: 12px;
+}
+
+.blue {
+	color: blue;
+}
+
+.red {
+	color: red;
+}
+</style>
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<div class="card">
+					<h1>Server Log Page</h1>
+					<p>Page to read the server log</p>
+					<p:commandButton value="Refresh"
+						actionListener="#{serverLogBean.initServerLog}" update="pnlLog" />
+				</div>
+				<div class="card">
+					<h:panelGroup id="pnlLog">
+						<p:scrollPanel id="log" mode="native"
+							style="width:100%;height:400px">
+							<h:outputText value="#{serverLogBean.log}" escape="false" />
+						</p:scrollPanel>
+						<script type="text/javascript">
+							var objDiv = document.getElementById("log");
+							objDiv.scrollTop = objDiv.scrollHeight;
+						</script>
+					</h:panelGroup>
+				</div>
+			</div>
+		</div>
+
+	</ui:define>
+
+</ui:composition>

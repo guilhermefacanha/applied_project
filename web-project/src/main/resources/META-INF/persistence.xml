@@ -1,0 +1,38 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+
+    <persistence-unit name="pu">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+
+		<class>org.lab.webcrawler.entity.RentProperty</class>
+		
+		<properties>
+
+			<!-- HIBERNATE SQL UPDATE PROPERTIES -->
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="false" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+
+			<!-- HIBERNATE CONNECTION PROPERTIES -->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
+
+			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+			<property name="javax.persistence.jdbc.url"	value="jdbc:postgresql://gfpostgres.ccqysqxekuuh.us-east-2.rds.amazonaws.com:5432/rentproperty" />
+			<property name="javax.persistence.jdbc.user" value="adminuser" />
+			<property name="javax.persistence.jdbc.password" value="admin123" />
+
+			<!-- <property name="hibernate.default_schema">users</property> -->
+
+			<!-- Configuracoes de depth fetch for databse relations -->
+			<property name="hibernate.max_fetch_depth" value="3" />
+
+			<!-- Configuracoes de pool -->
+			<property name="hibernate.connection.pool_size" value="50" />
+
+		</properties>
+	</persistence-unit>
+
+</persistence>

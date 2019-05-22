@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="breadcrumb">
+		<li>
+			<p:link outcome="/empty">Empty</p:link>
+		</li>
+	</ui:define>
+
+
+	<ui:define name="content">
+		<h:form>
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<div class="card card-w-title">
+						<h1>Create Rent Simulation</h1>
+						<p:panelGrid columns="2" layout="grid" style="width:auto" styleClass="ui-panelgrid-blank form-group">
+							<p:panelGrid columns="1" layout="grid" style="width:auto" styleClass="ui-panelgrid-blank form-group">
+								<h:panelGroup>
+									<fieldset style="max-width: 750px;">
+										<LEGEND>
+											<label>What city?</label>
+										</LEGEND>
+										<p:selectOneRadio layout="responsive" columns="7" value="#{simulatorBean.city}">
+											<f:selectItem itemLabel="Vancouver" itemValue="vancouver" />
+											<f:selectItem itemLabel="Burnaby" itemValue="burnaby" />
+											<f:selectItem itemLabel="Richmond" itemValue="richmond" />
+											<f:selectItem itemLabel="New Westminster" itemValue="newwest" />
+											<f:selectItem itemLabel="Surrey" itemValue="surrey" />
+											<f:selectItem itemLabel="Abbotsford" itemValue="abbot" />
+											<f:selectItem itemLabel="Other" itemValue="other" />
+										</p:selectOneRadio>
+									</fieldset>
+									<br />
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:spinner style="width: 20%" value="#{simulatorBean.property.bedrooms}" />
+									<label>How many bedrooms?</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:spinner style="width: 20%" value="#{simulatorBean.property.bath}" />
+									<label>How many bathrooms?</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText style="width: 20%" value="#{simulatorBean.property.size_sqft}" />
+									<label>Size (square ft)?</label>
+								</h:panelGroup>
+								<h:panelGroup styleClass="inputfield">
+									<p:selectBooleanCheckbox value="#{simulatorBean.professionally_managed}" />
+									<p:outputLabel for="@previous">The Property is Professionaly Managed?</p:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup styleClass="inputfield">
+									<p:selectBooleanCheckbox value="#{simulatorBean.no_pet_allowed}" />
+									<p:outputLabel for="@previous">The Property has the No Pet policy?</p:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup styleClass="inputfield">
+									<p:selectBooleanCheckbox value="#{simulatorBean.suit_laundry}" />
+									<p:outputLabel for="@previous">The Property has In Suite Laundry?</p:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup styleClass="inputfield">
+									<p:selectBooleanCheckbox value="#{simulatorBean.park_stall}" />
+									<p:outputLabel for="@previous">The Property has private Park Stall?</p:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup styleClass="inputfield">
+									<p:selectBooleanCheckbox value="#{simulatorBean.available_now}" />
+									<p:outputLabel for="@previous">The Property is Available Now?</p:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup styleClass="inputfield">
+									<p:selectBooleanCheckbox value="#{simulatorBean.amenities}" />
+									<p:outputLabel for="@previous">The Property has Amenities?</p:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup styleClass="inputfield">
+									<p:selectBooleanCheckbox value="#{simulatorBean.brand_new}" />
+									<p:outputLabel for="@previous">The Property can be qualified as Brand New?</p:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup styleClass="inputfield">
+									<p:selectBooleanCheckbox value="#{simulatorBean.basement}" />
+									<p:outputLabel for="@previous">The Property is Basement or Laneway?</p:outputLabel>
+								</h:panelGroup>
+
+								<p:commandButton value="Simulate Rent" actionListener="#{simulatorBean.simulateRent()}" update="pnlLog pnlResult" />
+							</p:panelGrid>
+							<p:panelGrid id="pnlResult" columns="1" layout="grid" style="width:auto" styleClass="ui-panelgrid-blank form-group">
+								<div class="ui-g dashboard">
+									<div class="ui-g-12 ui-lg-4">
+										<div class="task-box task-box-3">
+											<div class="task-box-header bold">
+												Result
+												<i class="material-icons">&#xE5D5;</i>
+											</div>
+											<div class="task-box-content">
+												<span class="task-status">
+													<h3>Regression Model</h3>
+												</span>
+												<div class="price-result">
+													<p>#{simulatorBean.property.regressionStr}</p>
+												</div>
+												<span class="task-status">
+													<h3>Gradient Xgb Model</h3>
+												</span>
+												<div class="price-result">
+													<p>#{simulatorBean.property.gradientXgbStr}</p>
+												</div>
+												<span class="task-status">
+													<h3>Gradient Boosting Model</h3>
+												</span>
+												<div class="price-result">
+													<p>#{simulatorBean.property.gradientBoostStr}</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</p:panelGrid>
+						</p:panelGrid>
+					</div>
+				</div>
+				<div class="ui-g-12">
+					<div class="card card-w-title">
+						<h:panelGroup id="pnlLog">
+							<p:scrollPanel id="log" mode="native" style="width:100%;height:400px">
+								<h:outputText value="#{simulatorBean.output}" escape="false" />
+							</p:scrollPanel>
+						</h:panelGroup>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
