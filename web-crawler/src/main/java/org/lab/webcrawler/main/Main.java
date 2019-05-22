@@ -25,8 +25,11 @@ public class Main {
 				craigService.updateRentedProperties();
 			}else if (op.equals("5")) {
 				craigService.getDatabaseSize();
+			}else if (op.equals("6")) {
+				craigService.removeNumberDaysSoldDate();
 			}
 			
+			getOperation("Press enter to continue...");
 
 			printMenu();
 			op = getOperation("Selected Option: ");
@@ -52,6 +55,7 @@ public class Main {
 		System.out.println("3 - Update Creation Date for Properties");
 		System.out.println("4 - Update Rented Properties");
 		System.out.println("5 - Database Size");
+		System.out.println("6 - Remove Number Days and Sold Date");
 		System.out.println("0 - Exit");
 
 	}

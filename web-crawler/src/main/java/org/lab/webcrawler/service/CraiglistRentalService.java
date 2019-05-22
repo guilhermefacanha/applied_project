@@ -106,6 +106,10 @@ public class CraiglistRentalService {
 		}
 		
 	}
+	
+	public void removeNumberDaysSoldDate() {
+		dao.removeNumberDaysSoldDate();
+	}
 
 	private void printProgress(double count, double size) {
 		if(count%100==0) {

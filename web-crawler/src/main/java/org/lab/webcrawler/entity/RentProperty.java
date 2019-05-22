@@ -35,7 +35,11 @@ public class RentProperty implements Serializable {
 	}
 	
 	public String getCreationDateStr() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		return dateFormat.format(creationDate);
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+			return dateFormat.format(creationDate);
+		} catch (Exception e) {
+			return "";
+		}
 	}
 }
