@@ -27,6 +27,8 @@ public class ServerLogBean implements Serializable {
 		StringBuffer str = new StringBuffer("<p>Server Log...</p>");
 		try {
 			Path path = Paths.get(serverLogPath);
+			System.out.println("Server Log Path: "+serverLogPath);
+			System.out.println("File Path: "+path.toString());
 			long lineCount = Files.lines(path).count();
 			Stream<String> lines = Files.lines(path);
 			int maxNoOfLines = 2500;

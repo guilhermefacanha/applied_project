@@ -6,7 +6,7 @@
 	<artifactId>websystem</artifactId>
 	<version>0.0.1</version>
 	<packaging>war</packaging>
-	<name>websystem</name>
+	<name>rentaldata</name>
 
 	<description>
 		Web Module for Data Analysis | JSF2 + Primefaces 6.2 + Tomcat 9
