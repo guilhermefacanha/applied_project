@@ -44,6 +44,8 @@ public class ServerLogBean implements Serializable {
 				});
 			
 			lines.close();
+			
+			UtilFunctions.adicionarMsg("Log loaded successfully", false);
 				
 		} catch (Exception e) {
 			UtilFunctions.adicionarMsg(e.getMessage(), true);
