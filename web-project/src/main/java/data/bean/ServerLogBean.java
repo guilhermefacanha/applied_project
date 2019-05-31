@@ -24,7 +24,7 @@ public class ServerLogBean implements Serializable {
 	String log;
 
 	public void initServerLog() {
-		StringBuffer str = new StringBuffer("<p>Server Log...</p>");
+		StringBuffer str = new StringBuffer("========================= <p>Server Log...</p> =========================");
 		try {
 			Path path = Paths.get(serverLogPath);
 			System.out.println("Server Log Path: "+serverLogPath);
