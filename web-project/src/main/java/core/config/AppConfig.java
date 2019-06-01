@@ -124,7 +124,8 @@ public class AppConfig
 	public static String getServerLogPath() {
 		String os = System.getProperty("os.name").toLowerCase();
 		if (os.contains("win")){
-			return "C:\\Users\\limafacanhag\\Desktop\\workspace\\eclipse_workspace\\applied_res\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\logs\\localhost_access_log."+UtilFunctions.getStringDeData(new Date(), "yyyy-MM-dd")+".txt";
+			String tomcatDir = System.getProperty("catalina.base");
+			return tomcatDir+"\\logs\\localhost_access_log."+UtilFunctions.getStringDeData(new Date(), "yyyy-MM-dd")+".txt";
 		}
 		else {
 			return "/tomcat/logs/catalina.out"; 
