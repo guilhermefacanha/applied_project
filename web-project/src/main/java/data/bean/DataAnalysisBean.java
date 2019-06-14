@@ -7,6 +7,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.lab.webcrawler.entity.RentProperty;
+
 import data.dao.DataAnalysisDAO;
 
 @ViewScoped
@@ -32,5 +34,15 @@ public class DataAnalysisBean implements Serializable {
 	
 	public void refreshData() {
 		dao.refreshData();
+	}
+	
+	public String getPricesArray() {
+		StringBuffer str = new StringBuffer("[");
+		for(RentProperty p : dao.getProperties()) {
+			str.append(p.getPrice()+",");
+		}
+		str.replace(str.lastIndexOf(",")-1, str.lastIndexOf(","), "]");
+		
+		return str.toString();
 	}
 }

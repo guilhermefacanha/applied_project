@@ -1,18 +1,18 @@
 package data.dao;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-import org.bson.BsonDocument;
-import org.bson.BsonString;
 import org.bson.Document;
 import org.lab.webcrawler.dao.resources.ResourcesDAO;
 import org.lab.webcrawler.entity.RentProperty;
 
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.BsonField;
+
+import core.util.UtilFunctions;
 
 public class DataAnalysisDAO implements Serializable{
 
@@ -21,6 +21,7 @@ public class DataAnalysisDAO implements Serializable{
 	private static long dataSize;
 	private static long dataSizeWithValue;
 	private static double dataPriceAverage;
+	private static List<RentProperty> properties = new ArrayList<>();
 	
 	public long getDataSize() {
 		if(dataSize==0)
@@ -41,6 +42,12 @@ public class DataAnalysisDAO implements Serializable{
 		return dataPriceAverage;
 	}
 	
+	public List<RentProperty> getProperties() {
+		if(!UtilFunctions.isListaValida(properties))
+			populateListProperties();
+		return properties;
+	}
+	
 	public void populateDataSize() {
 		dataSize = ResourcesDAO.getCollectionProperty().countDocuments();
 	}
@@ -49,6 +56,12 @@ public class DataAnalysisDAO implements Serializable{
 		Document priceValueFilter = new Document("$gt", 0);
 		Document query = new Document("price",priceValueFilter);
 		dataSizeWithValue = ResourcesDAO.getCollectionProperty().countDocuments(query);
+	}
+	
+	public void populateListProperties() {
+		Document priceValueFilter = new Document("$gt", 0);
+		Document query = new Document("price",priceValueFilter);
+		ResourcesDAO.getCollectionProperty().find(query).into(properties);
 	}
 	
 	public void populateAverage() {
@@ -77,6 +90,7 @@ public class DataAnalysisDAO implements Serializable{
 		populateAverage();
 		populateDataSize();
 		populateDataSizeWithValue();
+		populateListProperties();
 	}
 
 }

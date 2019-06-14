@@ -6,11 +6,11 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.json.JSONObject;
+import org.lab.webcrawler.entity.RentProperty;
 
 import com.google.gson.Gson;
 
 import core.util.UtilFunctions;
-import data.entity.Property;
 import lombok.Getter;
 import lombok.Setter;
 import okhttp3.MediaType;
@@ -28,7 +28,7 @@ public class SimulatorBean implements Serializable {
 
 	@Getter
 	@Setter
-	private Property property = new Property();
+	private RentProperty property = new RentProperty();
 
 	@Getter
 	@Setter
@@ -127,7 +127,7 @@ public class SimulatorBean implements Serializable {
 			JSONObject jsonobj = new JSONObject(responseStr);
 			if (jsonobj.has("0")) {
 				JSONObject p = jsonobj.getJSONObject("0");
-				property = new Gson().fromJson(p.toString(), Property.class);
+				property = new Gson().fromJson(p.toString(), RentProperty.class);
 			}
 
 			this.property.resetProperties();

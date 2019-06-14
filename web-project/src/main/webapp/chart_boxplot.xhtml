@@ -5,14 +5,11 @@
 
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-	<div id="myDiv"></div>
+	<div id="chart_boxplot"></div>
 
 	<script type="text/javascript">
 		/* <![CDATA[ */
-		var xData = [ 'Carmelo<br>Anthony', 'Dwyane<br>Wade',
-				'Deron<br>Williams', 'Brook<br>Lopez', 'Damian<br>Lillard',
-				'David<br>West', 'Blake<br>Griffin', 'David<br>Lee',
-				'Demar<br>Derozan' ];
+		var xData = [ 'Rent Price'];
 		function getrandom(num, mul) {
 			var value = []
 			for (i = 0; i <= num; i++) {
@@ -21,9 +18,8 @@
 			}
 			return value
 		}
-		var yData = [ getrandom(30, 10), getrandom(30, 20), getrandom(30, 25),
-				getrandom(30, 40), getrandom(30, 45), getrandom(30, 30),
-				getrandom(30, 20), getrandom(30, 15), getrandom(30, 43) ];
+		
+		var yData = [ #{dataAnalysisBean.getPricesArray()}];
 
 		var colors = [ 'rgba(93, 164, 214, 0.5)', 'rgba(255, 144, 14, 0.5)',
 				'rgba(44, 160, 101, 0.5)', 'rgba(255, 65, 54, 0.5)',
@@ -53,7 +49,7 @@
 		};
 
 		layout = {
-			title : 'Points Scored by the Top 9 Scoring NBA Players in 2012',
+			title : 'Boxplot Outliers Analysis',
 			yaxis : {
 				autorange : true,
 				showgrid : true,
@@ -75,7 +71,7 @@
 			showlegend : false
 		};
 
-		Plotly.newPlot('myDiv', data, layout, {
+		Plotly.newPlot('chart_boxplot', data, layout, {
 			showSendToCloud : true
 		});
 		/* ]]> */
