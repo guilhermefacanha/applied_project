@@ -8,46 +8,28 @@
             <div class="ui-g">
                 <div class="ui-g-12 ui-md-3">
                     <div class="intro-box">
-                        <div class="intro-box-name intro-box-greeting">Morning Jane</div>
-                        <div class="intro-box-detail">System Administrator</div>
+                        <div class="intro-box-name intro-box-greeting">Rental Data</div>
+                        <div class="intro-box-detail">System Dashboard</div>
                     </div>
                 </div>
                 <div class="ui-g-12 ui-md-9 intro-box-detail-container">
-                    <div class="intro-box">
-                        <div class="intro-box-name">Account Status</div>
-                        <div class="intro-box-detail">
-                            <span class="badge-green">PREMIUM</span>
-                        </div>
-                    </div>
-                    <div class="intro-box">
-                        <div class="intro-box-name">New Tasks</div>
-                        <div class="intro-box-detail">12</div>
-                    </div>
-                    <div class="intro-box">
-                        <div class="intro-box-name">Next Payment</div>
-                        <div class="intro-box-detail">Jan, 26</div>
-                    </div>
-                    <div class="intro-box">
-                        <div class="intro-box-name">Last Update</div>
-                        <div class="intro-box-detail">Jan, 25</div>
-                    </div>
                 </div>
 
-                <div class="ui-g-12 ui-md-6 ui-xl-3">
-                    <div class="overview-box overview-box-sales">
-                        <p:graphicImage name="images/dashboard/asset-sales.svg" library="olympia-layout" />
-                        <div class="overview-box-content">
-                            <div class="overview-box-title">SALES</div>
-                            <div class="overview-box-details">$74,325</div>
-                        </div>
-                    </div>
-                </div>
                 <div class="ui-g-12 ui-md-6 ui-xl-3">
                     <div class="overview-box overview-box-views">
                         <p:graphicImage name="images/dashboard/asset-views.svg" library="olympia-layout" />
                         <div class="overview-box-content">
-                            <div class="overview-box-title">VIEWS</div>
-                            <div class="overview-box-details">6215/day</div>
+                            <div class="overview-box-title">PROPERTIES DATA ANALYSED</div>
+                            <div class="overview-box-details"><h:outputText  value="#{dataAnalysisBean.dataSize}"/> </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-12 ui-md-6 ui-xl-3">
+                    <div class="overview-box overview-box-checkins">
+                        <p:graphicImage name="images/dashboard/asset-checkins.svg" library="olympia-layout" />
+                        <div class="overview-box-content">
+                            <div class="overview-box-title">PROPERTIES WITH VALUE</div>
+                            <div class="overview-box-details"><h:outputText  value="#{dataAnalysisBean.dataWithValueSize}"/> </div>
                         </div>
                     </div>
                 </div>
@@ -61,11 +43,11 @@
                     </div>
                 </div>
                 <div class="ui-g-12 ui-md-6 ui-xl-3">
-                    <div class="overview-box overview-box-checkins">
-                        <p:graphicImage name="images/dashboard/asset-checkins.svg" library="olympia-layout" />
+                    <div class="overview-box overview-box-sales">
+                        <p:graphicImage name="images/dashboard/asset-sales.svg" library="olympia-layout" />
                         <div class="overview-box-content">
-                            <div class="overview-box-title">CHECK-INS</div>
-                            <div class="overview-box-details">156</div>
+                            <div class="overview-box-title">AVERAGE RENT PRICE</div>
+                            <div class="overview-box-details"><h:outputText  value="#{dataAnalysisBean.dataPriceAverage}"/></div>
                         </div>
                     </div>
                 </div>
@@ -104,33 +86,10 @@
                         </div>
 
                         <div class="ui-g-12 ui-lg-6 projects">
-                            <div class="section-title">Projects</div>
+                            <div class="section-title">Charts</div>
                             <div class="card project">
-                                <div class="project-title">CUSTOMER PORTAL</div>
-                                <p>Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence. </p>
-                                <span class="project-badge">Redesign</span>
-                                <span class="project-badge project-badge-alt">Plan</span>
-                                <div class="project-progress project-progress-1">
-                                    <div class="project-progress-value">33%</div>
-                                </div>
-                            </div>
-                            <div class="card project">
-                                <div class="project-title">CHECKOUT FLOW</div>
-                                <p>Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas. </p>
-                                <span class="project-badge">Redesign</span>
-                                <span class="project-badge project-badge-alt">Implementation</span>
-                                <div class="project-progress project-progress-2">
-                                    <div class="project-progress-value">18%</div>
-                                </div>
-                            </div>
-                            <div class="card project">
-                                <div class="project-title">AUTHENTICATION</div>
-                                <p>Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking.</p>
-                                <span class="project-badge">Test</span>
-                                <span class="project-badge project-badge-alt">Deploy</span>
-                                <div class="project-progress project-progress-3">
-                                    <div class="project-progress-value">64%</div>
-                                </div>
+                                <div class="project-title">NBA CHART</div>
+                                <ui:include src="chart_nba.xhtml"/>
                             </div>
                         </div>
 

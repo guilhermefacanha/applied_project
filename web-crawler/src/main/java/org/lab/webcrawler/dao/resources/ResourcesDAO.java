@@ -25,6 +25,7 @@ public class ResourcesDAO {
 	private static MongoCollection<Document> collectionTest;
 	private static MongoCollection<RentProperty> collectionPropertyTest;
 	private static MongoCollection<RentProperty> collectionProperty;
+	private static MongoCollection<Document> collectionPropertyDocument;
 	
 
 	static {
@@ -35,6 +36,7 @@ public class ResourcesDAO {
 			database = client.getDatabase("rent-analysis");
 			database = database.withCodecRegistry(pojoCodecRegistry);
 			collectionTest = database.getCollection("test");
+			collectionPropertyDocument = database.getCollection("property");
 			collectionProperty = database.getCollection("property", RentProperty.class);
 			collectionPropertyTest = database.getCollection("property_test", RentProperty.class);
 		} catch (Exception e) {
@@ -53,6 +55,10 @@ public class ResourcesDAO {
 	
 	public static MongoCollection<RentProperty> getCollectionPropertyTest() {
 		return collectionPropertyTest;
+	}
+	
+	public static MongoCollection<Document> getCollectionPropertyDocument() {
+		return collectionPropertyDocument;
 	}
 
 	public static void dispose() {

@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
+import com.jcabi.manifests.Manifests;
+
 @Named
 @SessionScoped
 public class GuestPreferences implements Serializable {
@@ -57,4 +59,26 @@ public class GuestPreferences implements Serializable {
     public String getLogo() {
         return this.logo;
     }
+    
+    public String getProjectName(){
+		try {
+			return Manifests.read("project-name");
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	public String getProjectVersion(){
+		try {
+			return Manifests.read("project-version");
+		} catch (Exception e) {
+			return "0.0.1";
+		}
+	}
+	public String getProjectDate(){
+		try {
+			return Manifests.read("project-date");
+		} catch (Exception e) {
+			return "";
+		}
+	}
 }

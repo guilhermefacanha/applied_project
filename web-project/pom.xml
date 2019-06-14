@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.csis.data</groupId>
 	<artifactId>websystem</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<packaging>war</packaging>
 	<name>rentaldata</name>
 
@@ -121,6 +121,13 @@
 			<artifactId>pdfbox</artifactId>
 			<version>2.0.13</version>
 		</dependency>
+		
+		<!-- Manifest reader -->
+		<dependency>
+			<groupId>com.jcabi</groupId>
+			<artifactId>jcabi-manifests</artifactId>
+			<version>1.1</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.squareup.okhttp/okhttp -->
 		<dependency>
@@ -149,6 +156,13 @@
 				<configuration>
 					<outputDirectory>target/deploy</outputDirectory>
 					<warName>${project.name}</warName>
+					<archive>
+						<manifestEntries>
+							<project-date>${maven.build.timestamp}</project-date>
+							<project-name>${project.name}</project-name>
+							<project-version>${project.version}</project-version>
+						</manifestEntries>
+					</archive>
 				</configuration>
 			</plugin>
 		</plugins>
