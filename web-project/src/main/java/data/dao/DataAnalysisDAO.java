@@ -54,15 +54,29 @@ public class DataAnalysisDAO implements Serializable{
 	public void populateAverage() {
 		MongoCollection<Document> dbCollection = ResourcesDAO.getCollectionPropertyDocument();
 		Document query = Document.parse("{\r\n" + 
-				"       $group:\r\n" + 
-				"         {\r\n" + 
-				"           _id: \"$_id\",\r\n" + 
-				"           price: { $avg: \"$price\" }\r\n" + 
-				"         }\r\n" + 
-				"     }");
-		AggregateIterable<Document> aggregate = dbCollection.aggregate(Arrays.asList(query));
+				"		$match: {\r\n" + 
+				"			price: {\r\n" + 
+				"				$gt: 0\r\n" + 
+				"			}\r\n" + 
+				"		}\r\n" + 
+				"	}"); 
+		Document avg = Document.parse("{\r\n" + 
+				"		$group: {\r\n" + 
+				"			_id: null,\r\n" + 
+				"			price: {\r\n" + 
+				"				$avg: \"$price\"\r\n" + 
+				"			}\r\n" + 
+				"		}\r\n" + 
+				"	}");
+		AggregateIterable<Document> aggregate = dbCollection.aggregate(Arrays.asList(query,avg));
 		Document result = aggregate.first();
 		dataPriceAverage = result.getDouble("price");
+	}
+
+	public void refreshData() {
+		populateAverage();
+		populateDataSize();
+		populateDataSizeWithValue();
 	}
 
 }

@@ -1,27 +1,23 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	lang="en">
 
 <h:head>
 	<f:facet name="first">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<meta name="viewport"
-			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 	</f:facet>
 	<title><ui:insert name="title">PrimeFaces Olympia</ui:insert></title>
 	<h:outputScript name="js/nanoscroller.js" library="olympia-layout" />
 	<h:outputScript name="js/layout.js" library="olympia-layout" />
+	<script src="https://kit.fontawesome.com/4291e33fa8.js"></script>
 	<ui:insert name="head" />
 </h:head>
 
 <h:body>
-	<div
-		class="layout-wrapper #{guestPreferences.menuMode} #{guestPreferences.menuColor} #{guestPreferences.topBarColor}">
+	<div class="layout-wrapper #{guestPreferences.menuMode} #{guestPreferences.menuColor} #{guestPreferences.topBarColor}">
 		<ui:include src="./topbar.xhtml"></ui:include>
 		<ui:include src="./menu.xhtml"></ui:include>
 
@@ -46,8 +42,7 @@
 
 		<p:ajaxStatus styleClass="layout-ajax-loader">
 			<f:facet name="start">
-				<i class="fa fa-circle-o-notch fa-spin layout-ajax-loader-icon"
-					aria-hidden="true"></i>
+				<i class="fa fa-circle-o-notch fa-spin layout-ajax-loader-icon" aria-hidden="true"></i>
 			</f:facet>
 
 			<f:facet name="complete">
@@ -56,10 +51,9 @@
 		</p:ajaxStatus>
 	</div>
 
-	<h:outputStylesheet name="css/nanoscroller.css"
-		library="olympia-layout" />
-	<h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css"
-		library="olympia-layout" />
+	<h:outputStylesheet name="css/nanoscroller.css" library="olympia-layout" />
+	<h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="olympia-layout" />
+	<h:outputStylesheet name="custom-style.css" library="css" />
 </h:body>
 
 </html>

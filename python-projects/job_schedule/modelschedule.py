@@ -4,7 +4,8 @@ Created on Jun 7, 2019
 @author: limafacanhag
 '''
 
-#pip install job_schedule - necessary library
+#required modules
+#pip install schedule
 import schedule
 import time
 

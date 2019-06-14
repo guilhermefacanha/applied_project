@@ -29,4 +29,8 @@ public class DataAnalysisBean implements Serializable {
 	public String getDataPriceAverage() {
 		return NumberFormat.getCurrencyInstance().format(dao.getDataPriceAverage());
 	}
+	
+	public void refreshData() {
+		dao.refreshData();
+	}
 }
