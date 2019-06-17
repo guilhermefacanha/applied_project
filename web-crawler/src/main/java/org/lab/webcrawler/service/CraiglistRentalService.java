@@ -204,6 +204,7 @@ public class CraiglistRentalService {
 					.characteristics(data[3])
 					.link(data[4])
 					.creationDate(creationDate)
+					.no_basement(1)
 					.build()
 					);
 		}

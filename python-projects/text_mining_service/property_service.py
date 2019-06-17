@@ -116,9 +116,13 @@ class PropertyService:
         exact = ['1bd', '2bd', '3bd', '4bd', '5bd']  # numbers with bd together pattern
         exact2 = ['1-br', '2-br', '3-br', '4-br', '5-br']  # numbers with bd together pattern
         exact3 = ['1bed', '2bed', '3bed', '4bed', '5bed']  # numbers with bd together pattern
+        exact4 = ['1br', '2br', '3br', '4br', '5br']  # numbers with bd together pattern
         
         property['update'] = False
         desc = str(property['title']).lower() + ' ' + str(property['fullDescription']).lower() if 'fullDescription' in property else str(property['title']).lower()  # parse the texto to lowercase
+        desc = desc.replace('\\xc2',' ').replace('\\xa0',' ').replace('\xa0',' ') #clean dirty
+        desc = desc.replace('&nbsp;',' ').replace('+', ' ').replace('/', ' ').replace('-', ' ') #clean dirty
+        
         words = desc.split(' ');
         for i in range(0, len(words)):
             if words[i] in exact:  # check for a specific pattern in text and return the exact number of rooms from array position
@@ -135,6 +139,12 @@ class PropertyService:
 
             if words[i] in exact3:  # check for a specific pattern in text and return the exact number of rooms from array position
                 r = exact3.index(words[i]) + 1
+                property['bedrooms'] = r
+                property['update'] = True
+                return property;
+
+            if words[i] in exact4:  # check for a specific pattern in text and return the exact number of rooms from array position
+                r = exact4.index(words[i]) + 1
                 property['bedrooms'] = r
                 property['update'] = True
                 return property;
@@ -182,7 +192,7 @@ class PropertyService:
     
     def tryGetSizeFromDescription(self, property):
         
-        desc = str(property.characteristics).lower() + ' ' + str(property.title).lower() + ' ' + str(property.description).lower()  # parse the texto to lowercase
+        desc = str(property['title']).lower() + ' ' + str(property['fullDescription']).lower() if 'fullDescription' in property else str(property['title']).lower()  # parse the texto to lowercase
         words = desc.split(' ');
         for i in range(0, len(words)):
             
@@ -200,8 +210,7 @@ class PropertyService:
                     except:
                         r = -1
                 if r >= 100 :
-                    property.setSize(r)
-                    property.setUpdate()
+                    property['size_sqft'] = r;
                     return property;
                 
             if words[i] in ['sq/ft:', 'footage:'] :
@@ -217,8 +226,7 @@ class PropertyService:
                     except:
                         r = -1
                 if r >= 100 :
-                    property.setSize(r)
-                    property.setUpdate()
+                    property['size_sqft'] = r;
                     return property;
         
         find = re.search("\d{1,5}.sq", desc)
@@ -230,8 +238,7 @@ class PropertyService:
             try:
                 r = float(size)
                 if r >= 100 :
-                    property.setSize(r)
-                    property.setUpdate()
+                    property['size_sqft'] = r;
                     return property;
                     
             except:

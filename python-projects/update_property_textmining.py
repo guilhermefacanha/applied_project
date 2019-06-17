@@ -23,6 +23,11 @@ size = len(rows)
 count = 0
 for property in rows:
     property = propertyService.populateRoomSize(property)
+    if property['bedrooms'] == 0:
+        property = propertyService.tryGetBedroomFromDescription(property)
+    if property['size_sqft'] == 0:
+        property = propertyService.tryGetSizeFromDescription(property)
+        
     sentences = [] if 'fullDescription' not in property else propertyService.getSentences(str(property['fullDescription']))
     property = propertyService.populateTokens(property, sentences);
     print(property['_id'], ' - ', property['bedrooms'], 'bdr ', property['size_sqft'], 'sqft ')

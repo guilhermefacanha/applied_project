@@ -5,6 +5,8 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.bson.codecs.pojo.annotations.BsonIgnore;
+
 import com.google.gson.Gson;
 
 import lombok.AllArgsConstructor;
@@ -52,12 +54,17 @@ public class RentProperty implements Serializable {
 	private double gradient_xgb;
 	private double regression;
 	
+	@BsonIgnore
 	public String getRegressionStr() {
 		return NumberFormat.getCurrencyInstance().format(regression);
 	}
+	
+	@BsonIgnore
 	public String getGradientXgbStr() {
 		return NumberFormat.getCurrencyInstance().format(gradient_xgb);
 	}
+	
+	@BsonIgnore
 	public String getGradientBoostStr() {
 		return NumberFormat.getCurrencyInstance().format(gradient_boost);
 	}
@@ -80,6 +87,7 @@ public class RentProperty implements Serializable {
 		no_basement = 1;
 	}
 	
+	@BsonIgnore
 	public String getJson() {
 		return new Gson().toJson(this);
 	}
@@ -97,6 +105,7 @@ public class RentProperty implements Serializable {
 		this.creationDate = creation;
 	}
 	
+	@BsonIgnore
 	public String getCreationDateStr() {
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
