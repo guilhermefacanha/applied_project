@@ -38,7 +38,9 @@ public class RentProperty implements Serializable {
 	private double park_stall;
 	private double available_now;
 	private double amenities;
+	private double near_school;
 	private double brand_new;
+	private double furnished;
 	private double loc_vancouver;
 	private double loc_burnaby;
 	private double loc_richmond;

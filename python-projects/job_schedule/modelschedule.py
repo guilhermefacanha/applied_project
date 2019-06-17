@@ -9,19 +9,27 @@ Created on Jun 7, 2019
 import schedule
 import time
 
-from db.propertiesdao import PropertiesDao
-dao = PropertiesDao()
+def job_test():
+    print("Scheduler Working")
+    
+def job_text_mining():
+    print('=====Starting Text Mining=====')
+    exec(open('../update_property_textmining.py').read())
+    exec(open('../update_property_bdr_textmining.py').read())
+    print('===== Text Mining Finished=====')
 
-def job():
-    print("I'm working...")
-    print(dao.getOneProperty())
 
-
-schedule.every(1).minutes.do(job)
-schedule.every(10).minutes.do(job)
-schedule.every().hour.do(job)
-schedule.every().day.at("10:30").do(job)
+print('==== Scheduling jobs ====')
+schedule.every(1).minutes.do(job_test)
+print('>>Test every 1 min')
+#schedule.every(10).minutes.do(job_test)
+schedule.every(1).hour.do(job_text_mining)
+print('>>Text Mining every 1 hour')
+#schedule.every().day.at("10:30").do(job_test)
+print('==== Jobs Scheduled ====')
 
 while 1:
     schedule.run_pending()
     time.sleep(1)
+
+    

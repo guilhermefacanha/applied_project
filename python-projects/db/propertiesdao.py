@@ -40,12 +40,15 @@ class PropertiesDao(object):
     def getOneProperty(self):
         return self.propertyCollection.find_one()
     
-    def getAllProperties(self):
+    def getAllProperties(self, limit=0):
         allprop = []
-        
-        for x in self.propertyCollection.find():
-            allprop.append(x)
-        
+        if limit > 0:
+            for x in self.propertyCollection.find().limit(limit):
+                allprop.append(x)
+        else:
+            for x in self.propertyCollection.find():
+                allprop.append(x)
+            
         return allprop
     
     def getAllPropertiesWithQuery(self, query):
@@ -56,6 +59,9 @@ class PropertiesDao(object):
         
         return props
     
+    def updateProperty(self, _id, newValues):
+        myquery = { "_id": _id }
+        self.propertyCollection.update_one(myquery, newValues)
 
 #self test code
 #dao = PropertiesDao()
