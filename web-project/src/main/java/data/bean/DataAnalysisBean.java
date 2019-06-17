@@ -37,12 +37,32 @@ public class DataAnalysisBean implements Serializable {
 	}
 	
 	public String getPricesArray() {
-		StringBuffer str = new StringBuffer("[");
-		for(RentProperty p : dao.getProperties()) {
-			str.append(p.getPrice()+",");
-		}
-		str.replace(str.lastIndexOf(",")-1, str.lastIndexOf(","), "]");
-		
-		return str.toString();
+		return dao.getPricesArray();
+	}
+	
+	public String getBedroomsArray() {
+		return dao.getBedroomsArray();
+	}
+	
+	public String getLocationLabelArray() {
+		return dao.getLocationDistribution()[0];
+	}
+	
+	public String getLocationValuesArray() {
+		return dao.getLocationDistribution()[1];
+	}
+	
+	public String getBedroomAverage() {
+		return NumberFormat.getInstance().format(dao.getAverage("bedrooms"));
+	}
+	
+	public String getNumberSuitLaundry() {
+		return NumberFormat.getInstance().format(
+				dao.getProperties().stream().filter(p -> p.getSuit_laundry()==1).count());
+	}
+	
+	public String getNumberParkStall() {
+		return NumberFormat.getInstance().format(
+				dao.getProperties().stream().filter(p -> p.getPark_stall()==1).count());
 	}
 }

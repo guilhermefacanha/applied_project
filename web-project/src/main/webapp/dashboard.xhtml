@@ -61,26 +61,20 @@
 						</div>
 					</div>
 				</div>
-
+				
 				<div class="ui-g-12 ui-xl-9 ui-g-nopad">
 					<div class="ui-g">
 						<div class="ui-g-12 ui-lg-6 projects">
-							<div class="section-title">Charts</div>
+							<div class="section-title">Location Distribution</div>
 							<div class="card project">
-								<div class="project-title">NBA CHART</div>
-								<ui:include src="chart_nba.xhtml" />
-							</div>
-						</div>
-						<div class="ui-g-12 ui-lg-6 projects">
-							<div class="section-title">Charts</div>
-							<div class="card project">
-								<div class="project-title">BOXPLOT CHART (OUTLIERS)</div>
-								<ui:include src="chart_boxplot.xhtml" />
+								<div class="project-title"></div>
+								<ui:include src="chart_bar_location.xhtml" />
 							</div>
 						</div>
 
 					</div>
 				</div>
+
 
 				<div class="ui-g-12 ui-xl-3">
 					<div class="section-title">Services</div>
@@ -88,7 +82,7 @@
 						<i class="fas fa-bed"></i>
 						<div>
 							<span class="service-name">Average Bedrooms</span> <span
-								class="service-status">2</span>
+								class="service-status">#{dataAnalysisBean.getBedroomAverage()}</span>
 						</div>
 						<p:commandButton type="button" value="Enable"
 							styleClass="success-btn" />
@@ -97,7 +91,7 @@
 						<i class="fas fa-bath"></i>
 						<div>
 							<span class="service-name">Average Bathrooms</span> <span
-								class="service-status">2</span>
+								class="service-status">1</span>
 						</div>
 						<p:commandButton type="button" value="Disable"
 							styleClass="danger-btn" />
@@ -106,17 +100,17 @@
 						<i class="fas fa-water"></i>
 						<div>
 							<span class="service-name">In Suite Laundy</span> <span
-								class="service-status">10/#{dataAnalysisBean.dataWithValueSize}
+								class="service-status">#{dataAnalysisBean.getNumberSuitLaundry()}/#{dataAnalysisBean.dataWithValueSize}
 								properties</span>
 						</div>
 						<p:commandButton type="button" value="Enable"
 							styleClass="success-btn" />
 					</div>
 					<div class="card service-box">
-						<i class="fa fa-coffee"></i>
+						<i class="fas fa-car"></i>
 						<div>
-							<span class="service-name">Coffee Machine</span> <span
-								class="service-status">714 Shots Available</span>
+							<span class="service-name">Park Stall</span> <span
+								class="service-status">#{dataAnalysisBean.getNumberParkStall()}/#{dataAnalysisBean.dataWithValueSize}</span>
 						</div>
 						<p:commandButton type="button" value="Enable"
 							styleClass="success-btn" />

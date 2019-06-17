@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Dashboard</ui:define>
+
+	<ui:define name="content">
+		<div class="layout-dashboard">
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<div class="intro-box">
+						<div class="intro-box-name intro-box-greeting">Vancouver Property Rental Data Analytics and Tool</div>
+						<div class="intro-box-detail">Boxplot Analysis</div>
+						<div class="intro-box-detail">
+						<p:separator></p:separator>
+						</div>
+
+					</div>
+				</div>
+				<div class="ui-g-12 ui-md-9 intro-box-detail-container"></div>
+
+				<div class="ui-g-12 ui-xl-9 ui-g-nopad">
+					<div class="ui-g">
+						<div class="ui-g-12 ui-lg-6 projects">
+							<div class="section-title">Number of Bedrooms</div>
+							<div class="card project">
+								<div class="project-title">BOXPLOT CHART (OUTLIERS)</div>
+								<ui:include src="chart_boxplot_bdr.xhtml" />
+							</div>
+						</div>
+						<div class="ui-g-12 ui-lg-6 projects">
+							<div class="section-title">Rent Price</div>
+							<div class="card project">
+								<div class="project-title">BOXPLOT CHART (OUTLIERS)</div>
+								<ui:include src="chart_boxplot.xhtml" />
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
