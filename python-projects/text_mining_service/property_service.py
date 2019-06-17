@@ -140,7 +140,7 @@ class PropertyService:
                 return property;
             
             # check for a split pattern in text and apply algorithm to identify the number
-            if words[i] in ['bedroom', 'bedrooms', 'bed', 'br', 'brm', 'bdrm', 'bdr'] or 'bed' in words[i] or 'bd' in words[i]:
+            if words[i] in ['bedroom', 'bedrooms', 'bed', 'br', 'brm', 'bdrm', 'bdr', 'rooms','bdrms'] or 'bed' in words[i] or 'bd' in words[i]:
                 lw = str(words[i - 1]).strip()
                 if(lw in numbers):
                     lw = numbers.index(lw) + 1
@@ -239,8 +239,10 @@ class PropertyService:
                 
         return property;
     
+    def tryGetBathFromDescription(self, property):
+        property['update'] = False
         numbers = ['one', 'two', 'three', 'four', 'five']  # writed numbers to be found
-        desc = str(property.characteristics).lower() + ' ' + str(property.title).lower() + ' ' + str(property.description).lower()  # parse the texto to lowercase
+        desc = str(property['characteristics']).lower() + ' ' + str(property['title']).lower() + ' ' + str(property['fullDescription']).lower() if 'fullDescription' in property else str(property['characteristics']).lower() + ' ' + str(property['title']).lower()  # parse the texto to lowercase
         desc = desc.replace('\\xc2',' ').replace('\\xa0',' ') #clean dirty
         desc = desc.replace('&nbsp;',' ').replace('+', ' ').replace('/', ' ').replace('-', ' ') #clean dirty
         desc = desc.replace('full','').replace('private','').replace('  ',' ') #replace word full there is found between the bathroom word and number
@@ -248,8 +250,8 @@ class PropertyService:
         wordContains = ['bath','bths']
         
         if 'one and half ba' in desc:
-            property.setBath(1.5)
-            property.setUpdate()
+            property['bath']=1.5
+            property['update']=True
             return property;
         
         find = re.search("\d{1,5}ba|\d[.]\d{1,5}ba", desc)
@@ -259,8 +261,8 @@ class PropertyService:
             try:
                 r = float(bath)
                 if r > 0 and  r <= 7 :
-                    property.setBath(r)
-                    property.setUpdate()
+                    property['bath']=r
+                    property['update']=True
                     return property;
             except:
                 pass
@@ -276,8 +278,8 @@ class PropertyService:
                 try:
                     r = float(lw)
                     if r > 0 and  r <= 7 :
-                        property.setBath(r)
-                        property.setUpdate()
+                        property['bath']=r
+                        property['update']=True
                         return property;
                 except:
                     pass
@@ -291,15 +293,15 @@ class PropertyService:
                 try:
                     r = float(lw)
                     if r > 0 and  r <= 7 :
-                        property.setBath(r)
-                        property.setUpdate()
+                        property['bath']=r
+                        property['update']=True
                         return property;
                 except:
                     pass
                 
         if 'bath' in desc:
-            property.setBath(1)
-            property.setUpdate()
+            property['bath']=1
+            property['update']=True
             return property;
                 
         return property;

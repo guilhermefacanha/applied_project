@@ -16,7 +16,7 @@ propertyService = PropertyService()
 sklearnService = SkLearnService()
 
 #rows = dao.getAllProperties(1000)
-rows = dao.getAllPropertiesWithQuery({ "bedrooms": None });
+rows = dao.getAllPropertiesWithQuery({"$or":[{"bedrooms":None},{"bedrooms":0}]});
 print("Loaded Records: ", len(rows)) 
 
 size = len(rows)
@@ -43,7 +43,7 @@ for property in rows:
         dao.updateProperty(property['_id'], newValues)
     count += 1
     try:
-        if count % 50 == 0:
+        if count % 100 == 0:
             percent = round((count / size * 100), 2);
             print('==========================================')
             print('PROGESS: ', count, '/', size, '(', percent, '%)')

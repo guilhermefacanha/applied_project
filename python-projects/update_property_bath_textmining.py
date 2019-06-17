@@ -1,35 +1,28 @@
-import nltk  # Load NLTK
 import time
-
-from text_mining_service.sklearn_service import SkLearnService
-from text_mining_service.property_service import PropertyService
 from db.propertiesdao import PropertiesDao
-# nltk.download()
+from text_mining_service.property_service import PropertyService
+from text_mining_service.sklearn_service import SkLearnService
 
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('wordnet')
 
-dao = PropertiesDao();
+dao = PropertiesDao()
 propertyService = PropertyService()
 sklearnService = SkLearnService()
 
-rows = dao.getAllPropertiesWithQuery({"$or":[{"bedrooms":None},{"bedrooms":0}]});
+rows =  dao.getAllPropertiesWithQuery({"$or":[{"bath":None},{"bath":0}]});
 
 print("Loaded Records: ", len(rows)) 
+
 size = len(rows)
-
-
 count = 0
 for property in rows:
-    property = propertyService.tryGetBedroomFromDescription(property)
+    property = propertyService.tryGetBathFromDescription(property) 
     if property['update'] == True:
-        print(property['_id'], ' - ', property['bedrooms'], 'bdr ')
-        newvalues = { "$set": { "bedrooms": property['bedrooms'] } }
+        print(property['_id'], ' - baths: ', property['bath'])
+        newvalues = { "$set": { "bath": property['bath'] } }
         dao.updateProperty(property['_id'], newvalues);
     count += 1
     try:
-        if count % 100 == 0:
+        if count % 300 == 0:
             percent = round((count / size * 100), 2);
             print('==========================================')
             print('PROGESS: ', count, '/', size, '(', percent, '%)')
