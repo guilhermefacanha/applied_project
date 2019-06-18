@@ -66,8 +66,9 @@ except:
     model.fit(X_train, y_train)
     pickle.dump(model, open(path+filename, 'wb'))
     print('Gradient Boosting Model exported to: ', path+filename)
+    saveModelData()
+    print('Gradient Boosting Model data saved in database')
     
-saveModelData()
 
 print('======================================================')
 
