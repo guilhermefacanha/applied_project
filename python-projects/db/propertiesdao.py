@@ -8,6 +8,7 @@ Created on Jun 6, 2019
 #python -m pip install pymongo 
 
 import pymongo
+from bson.objectid import ObjectId
 
 class PropertiesDao(object):
     '''
@@ -23,6 +24,7 @@ class PropertiesDao(object):
         self.client = pymongo.MongoClient("mongodb://adminuser:admin123@ds149365.mlab.com:49365/rent-analysis")
         self.db = self.client["rent-analysis"]
         self.propertyCollection = self.db["property"]
+        self.modelCollection = self.db["pred_model"]
         print('Connection to database completed!')
         pass
     
@@ -62,6 +64,9 @@ class PropertiesDao(object):
     def updateProperty(self, _id, newValues):
         myquery = { "_id": _id }
         self.propertyCollection.update_one(myquery, newValues)
+    
+    def saveModel(self, data):
+        self.modelCollection.insert(data)
 
 #self test code
 #dao = PropertiesDao()

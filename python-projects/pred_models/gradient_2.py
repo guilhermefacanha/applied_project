@@ -4,26 +4,41 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import statsmodels.api as sm
 import pickle
+import datetime
 
 from sklearn import ensemble
 from sklearn.metrics import mean_squared_error
 from db.propertiesdao import PropertiesDao
+from bson.objectid import ObjectId
+
+def saveModelData():
+    data = {};
+    data['_id'] = str(ObjectId())
+    data['model'] = 'GradientBoostingRegressor'
+    data['file'] = filename
+    data['chart'] = chartfilename
+    data['date'] = datetime.datetime.utcnow()
+    dao.saveModel(data)
 
 # #############################################################################
-# Load data
-filename = '../data/grad_2_model.sav'
+dao = PropertiesDao()
 
-dataset = PropertiesDao().getAllPropertiesWithQuery({"bedrooms":{"$gt":0},"price":{"$gt":0},"price":{"$lt":8000},"bath":{"$ne":None},"size_sqft":{"$ne":None}}) # bedrooms > 0 and bedrooms < 5 and size_sqft < 5000 and price < 6000 and bath < 5
+# Get current date and time and create a time stamp
+x = datetime.datetime.now()
+dtstamp = x.strftime("%Y%m%d")
+
+# Files variables
+path = '../data/'
+filename = 'grad_2_model_'+dtstamp+'.sav'
+chartfilename = 'grad_2_model_pred_chart_'+dtstamp+'.png'
+
+# Load data
+dataset = dao.getAllPropertiesWithQuery({"bedrooms":{"$gt":0},"price":{"$gt":0},"price":{"$lt":8000},"bath":{"$ne":None},"size_sqft":{"$ne":None}}) # bedrooms > 0 and bedrooms < 5 and size_sqft < 5000 and price < 6000 and bath < 5
 dataset = pd.DataFrame.from_dict(dataset)
 print('Dataset Acquired: (',len(dataset),')')
 
 # define the data/predictors as the pre-set feature names  
-# old dataset 
-#df = dataset[['bedrooms', 'bath', 'size_sqft', 'professionally_managed', 'no_pet_allowed', 'suit_laundry', 'park_stall', 'available_now', 'amenities', 'brand_new']]
-
-# new dataset
 df = dataset[['bedrooms', 'bath', 'size_sqft', 'professionally_managed', 'no_pet_allowed', 'suit_laundry', 'park_stall', 'available_now', 'furnished', 'amenities', 'brand_new','loc_vancouver', 'loc_burnaby', 'loc_richmond', 'loc_surrey', 'loc_newwest', 'loc_abbotsford', 'no_basement']]
-
 
 # Put the target (housing value -- MEDV) in another DataFrame
 target = dataset[['price']]
@@ -40,7 +55,7 @@ X_test = X
 # Fit regression model
 print('======================================================')
 try:
-    model = pickle.load(open(filename, 'rb'))
+    model = pickle.load(open(path+filename, 'rb'))
     print('Gradient Boosting model loaded from saved data file')
 except:
     print('Calculating Gradient Boosting')
@@ -49,8 +64,10 @@ except:
     model = ensemble.GradientBoostingRegressor(**params)
     
     model.fit(X_train, y_train)
-    pickle.dump(model, open(filename, 'wb'))
-    print('Gradient Boosting Model exported to: ', filename)
+    pickle.dump(model, open(path+filename, 'wb'))
+    print('Gradient Boosting Model exported to: ', path+filename)
+    
+saveModelData()
 
 print('======================================================')
 
@@ -77,4 +94,11 @@ plt.title("Extreme Gradient Boosting: Prediction Vs Test Data", fontsize = 18, c
 plt.xlabel("Predicted Power Output", fontsize = 18) 
 plt.ylabel("Observed Power Output", fontsize = 18)
 plt.plot(z[:,0], z[:,1], color = "blue", lw= 3)
-plt.show()
+
+plt.savefig(path+chartfilename)
+#plt.show() uncomment to show plot in screen
+
+print()
+print('Model Calculation Finished')
+print()
+print('======================================================')
