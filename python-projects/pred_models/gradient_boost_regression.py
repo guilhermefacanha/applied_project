@@ -11,13 +11,15 @@ from sklearn.metrics import mean_squared_error
 from db.propertiesdao import PropertiesDao
 from bson.objectid import ObjectId
 
-def saveModelData():
+def saveModelData(performance, mean_error):
     data = {};
     data['_id'] = str(ObjectId())
     data['model'] = 'GradientBoostingRegressor'
     data['file'] = filename
     data['chart'] = chartfilename
     data['date'] = datetime.datetime.utcnow()
+    data['performance'] = performance
+    data['mean_error'] = mean_error
     dao.saveModel(data)
 
 # #############################################################################
@@ -31,6 +33,8 @@ dtstamp = x.strftime("%Y%m%d")
 path = '../data/'
 filename = 'grad_2_model_'+dtstamp+'.sav'
 chartfilename = 'grad_2_model_pred_chart_'+dtstamp+'.png'
+
+save = False
 
 # Load data
 dataset = dao.getAllPropertiesWithQuery({"bedrooms":{"$gt":0},"price":{"$gt":0},"price":{"$lt":8000},"bath":{"$ne":None},"size_sqft":{"$ne":None}}) # bedrooms > 0 and bedrooms < 5 and size_sqft < 5000 and price < 6000 and bath < 5
@@ -66,7 +70,7 @@ except:
     model.fit(X_train, y_train)
     pickle.dump(model, open(path+filename, 'wb'))
     print('Gradient Boosting Model exported to: ', path+filename)
-    saveModelData()
+    save = True
     print('Gradient Boosting Model data saved in database')
     
 
@@ -96,7 +100,9 @@ plt.xlabel("Predicted Power Output", fontsize = 18)
 plt.ylabel("Observed Power Output", fontsize = 18)
 plt.plot(z[:,0], z[:,1], color = "blue", lw= 3)
 
-plt.savefig(path+chartfilename)
+if(save == True):
+    plt.savefig(path+chartfilename)
+    saveModelData(perf,rmse)
 #plt.show() uncomment to show plot in screen
 
 print()
