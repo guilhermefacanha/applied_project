@@ -25,7 +25,7 @@ public class AppConfigServlet extends HttpServlet {
 		System.out.println("==============================================");
 		System.out.println("Application init");
 		System.out.println("==============================================");
-		createSchedule();
+//		createSchedule();
 	}
 
 	private void createSchedule() {

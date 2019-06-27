@@ -130,11 +130,14 @@ public class DataAnalysisDAO implements Serializable {
 
 	public double getAverage(String field) {
 		MongoCollection<Document> dbCollection = ResourcesDAO.getCollectionPropertyDocument();
-		Document query = Document.parse("{\r\n" + "		$match: {\r\n" + "			" + field + ": {\r\n"
-				+ "				$gt: 0\r\n" + "			}\r\n" + "		}\r\n" + "	}");
+		Document query = Document.parse("{" 
+				+ "$match: {"
+				+ 	field + ": {$gt: 0},"
+				+ 	field + ": {$lt: 50000}"
+				+ "	}" 
+				+ "}");
 		Document avg = Document
-				.parse("{\r\n" + "		$group: {\r\n" + "			_id: null,\r\n" + "			" + field + ": {\r\n"
-						+ "				$avg: \"$" + field + "\"\r\n" + "			}\r\n" + "		}\r\n" + "	}");
+				.parse("{$group: {_id: null,"+ field + ": {$avg: \"$" +field+"\"}}}");
 		AggregateIterable<Document> aggregate = dbCollection.aggregate(Arrays.asList(query, avg));
 		Document result = aggregate.first();
 		return result.getDouble(field);
