@@ -51,9 +51,17 @@ public class DataAnalysisBean implements Serializable {
 	public String getLocationValuesArray() {
 		return dao.getLocationDistribution()[1];
 	}
+
+	public String getLocationPriceValuesArray() {
+		return dao.getLocationDistribution()[2];
+	}
 	
 	public String getBedroomAverage() {
 		return NumberFormat.getInstance().format(dao.getAverage("bedrooms"));
+	}
+	
+	public String getBathroomAverage() {
+		return NumberFormat.getInstance().format(dao.getAverage("bath"));
 	}
 	
 	public String getNumberSuitLaundry() {

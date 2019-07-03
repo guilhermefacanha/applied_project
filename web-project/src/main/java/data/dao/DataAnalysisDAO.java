@@ -83,22 +83,39 @@ public class DataAnalysisDAO implements Serializable {
 
 	// Populate Methods
 	private void populateLocationDistribution() {
-		locationDistribution = new String[2];
+		locationDistribution = new String[3];
 		String labels = "['Vancouver','Burnaby','Richmond','Surrey','New Westminster','Abbotsford']";
 		double[] values = new double[6];
+		double[] averages = new double[6];
 		for (RentProperty p : getProperties()) {
-			if (p.getLoc_vancouver() == 1)
+			if (p.getLoc_vancouver() == 1) {
 				values[0] += 1;
-			else if (p.getLoc_burnaby() == 1)
+				averages[0] += p.getPrice();
+			}
+			else if (p.getLoc_burnaby() == 1){
 				values[1] += 1;
-			else if (p.getLoc_richmond() == 1)
+				averages[1] += p.getPrice();
+			}
+			else if (p.getLoc_richmond() == 1) {
 				values[2] += 1;
-			else if (p.getLoc_surrey() == 1)
+				averages[2] += p.getPrice();
+			}
+			else if (p.getLoc_surrey() == 1) {
 				values[3] += 1;
-			else if (p.getLoc_newwest() == 1)
+				averages[3] += p.getPrice();
+			}
+			else if (p.getLoc_newwest() == 1) {
 				values[4] += 1;
-			else if (p.getLoc_abbotsford() == 1)
+				averages[4] += p.getPrice();
+			}
+			else if (p.getLoc_abbotsford() == 1) {
 				values[5] += 1;
+				averages[5] += p.getPrice();
+			}
+		}
+		
+		for (int i = 0; i < averages.length; i++) {
+			averages[i] = averages[i] / values[i];
 		}
 		
 		StringBuffer str = new StringBuffer("[");
@@ -106,9 +123,17 @@ public class DataAnalysisDAO implements Serializable {
 			str.append(d + ",");
 		}
 		String locValues = str.substring(0, str.length()-1)+"]";
+		
+		
+		str = new StringBuffer("[");
+		for (double d : averages) {
+			str.append(d + ",");
+		}
+		String locPriceValues = str.substring(0, str.length()-1)+"]";
 
 		locationDistribution[0] = labels;
 		locationDistribution[1] = locValues;
+		locationDistribution[2] = locPriceValues;
 	}
 
 	public void populateDataSize() {
@@ -128,12 +153,21 @@ public class DataAnalysisDAO implements Serializable {
 		ResourcesDAO.getCollectionProperty().find(query).into(properties);
 	}
 
+	/**
+	 *  Example on query mongo command line
+	 *  db.property.aggregate(
+		[
+			{$match:{bath:{$lt:50000, $gt:0}}}, 
+			{$group:{_id: null, bath:{$avg:"$bath"}}}
+		]);
+	 * 
+	 * 
+	 * */
 	public double getAverage(String field) {
 		MongoCollection<Document> dbCollection = ResourcesDAO.getCollectionPropertyDocument();
 		Document query = Document.parse("{" 
 				+ "$match: {"
-				+ 	field + ": {$gt: 0},"
-				+ 	field + ": {$lt: 50000}"
+				+ 	field + ": {$lt: 50000,$gt: 0}"
 				+ "	}" 
 				+ "}");
 		Document avg = Document

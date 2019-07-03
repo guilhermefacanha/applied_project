@@ -150,7 +150,18 @@ class PropertyService:
                 return property;
             
             # check for a split pattern in text and apply algorithm to identify the number
-            if words[i] in ['bedroom', 'bedrooms', 'bed', 'br', 'brm', 'bdrm', 'bdr', 'rooms','bdrms'] or 'bed' in words[i] or 'bd' in words[i]:
+            if words[i] in ['bedroom:']:
+                try:
+                    r = int(words[i+1])
+                except:
+                    r = -1
+                if r >= 0 and r <= 7 :  # if the number is too high probably is not right
+                    property['bedrooms'] = r
+                    property['update'] = True
+                    return property;
+                    
+            # check for a split pattern in text and apply algorithm to identify the number
+            if words[i] in ['bedroom', 'bedrooms', 'bed', 'br', 'brm', 'bdrm', 'bdr', 'room', 'rooms','bdrms'] or 'bed' in words[i] or 'bd' in words[i]:
                 lw = str(words[i - 1]).strip()
                 if(lw in numbers):
                     lw = numbers.index(lw) + 1
@@ -187,6 +198,10 @@ class PropertyService:
                     
             except:
                 r = -1
+        
+        if property['bedrooms'] == 0 and 'suite' in desc:
+            property['bedrooms'] = 1;
+            property['no_basement'] = 0;
                 
         return property;
     

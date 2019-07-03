@@ -30,8 +30,8 @@ for property in rows:
         
     sentences = [] if 'fullDescription' not in property else propertyService.getSentences(str(property['fullDescription']))
     property = propertyService.populateTokens(property, sentences);
-    print(property['_id'], ' - ', property['bedrooms'], 'bdr ', property['size_sqft'], 'sqft ')
     if('update' in property and property['update']==True):
+        print(property['_id'], ' - ', property['bedrooms'], 'bdr ', property['size_sqft'], 'sqft ')
         newValues = { "$set": {
             "bedrooms":property['bedrooms'],
             "size_sqft":property['size_sqft'],
@@ -43,6 +43,7 @@ for property in rows:
             "amenities":property['amenities'],
             "near_school":property['near_school'],
             "brand_new":property['brand_new'],
+            "no_basement":property['no_basement'],
             "furnished":property['furnished']
             }}
         dao.updateProperty(property['_id'], newValues)

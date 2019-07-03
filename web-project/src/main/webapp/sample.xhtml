@@ -201,7 +201,7 @@
                         
                         <div class="card card-w-title">
                             <h1>Tree</h1>
-                            <p:tree value="#{treeIconView.root}" var="doc">
+                            <p:tree value="#{treeIconView.root}" var="doc" dir="rtl" orientation="horizontal">
                                 <p:treeNode expandedIcon="fa fa-fw fa-folder-open" collapsedIcon="fa fa-fw fa-folder">
                                     <h:outputText value="#{doc.name}"/>
                                 </p:treeNode>

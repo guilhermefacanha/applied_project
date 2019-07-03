@@ -1,8 +1,4 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
 
 	<ui:define name="title">Dashboard</ui:define>
 
@@ -14,10 +10,9 @@
 						<div class="intro-box-name intro-box-greeting">Vancouver Property Rental Data Analytics and Tool</div>
 						<div class="intro-box-detail">System Dashboard</div>
 						<div class="intro-box-detail">
-						<p:separator></p:separator>
+							<p:separator></p:separator>
 							<h:form>
-								<p:commandButton value="Refresh Data"
-									actionListener="#{dataAnalysisBean.refreshData}" update="@all" />
+								<p:commandButton value="Refresh Data" actionListener="#{dataAnalysisBean.refreshData}" update="@all" />
 							</h:form>
 						</div>
 
@@ -27,8 +22,7 @@
 
 				<div class="ui-g-12 ui-md-6 ui-xl-3">
 					<div class="overview-box overview-box-views">
-						<p:graphicImage name="images/dashboard/asset-views.svg"
-							library="olympia-layout" />
+						<p:graphicImage name="images/dashboard/asset-views.svg" library="olympia-layout" />
 						<div class="overview-box-content">
 							<div class="overview-box-title">DATA ANALYSED</div>
 							<div class="overview-box-details">
@@ -39,8 +33,7 @@
 				</div>
 				<div class="ui-g-12 ui-md-6 ui-xl-3">
 					<div class="overview-box overview-box-checkins">
-						<p:graphicImage name="images/dashboard/asset-checkins.svg"
-							library="olympia-layout" />
+						<p:graphicImage name="images/dashboard/asset-checkins.svg" library="olympia-layout" />
 						<div class="overview-box-content">
 							<div class="overview-box-title">PROPERTIES WITH VALUE</div>
 							<div class="overview-box-details">
@@ -51,8 +44,7 @@
 				</div>
 				<div class="ui-g-12 ui-md-6 ui-xl-3">
 					<div class="overview-box overview-box-sales">
-						<p:graphicImage name="images/dashboard/asset-sales.svg"
-							library="olympia-layout" />
+						<p:graphicImage name="images/dashboard/asset-sales.svg" library="olympia-layout" />
 						<div class="overview-box-content">
 							<div class="overview-box-title">AVERAGE RENT PRICE</div>
 							<div class="overview-box-details">
@@ -61,14 +53,18 @@
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="ui-g-12 ui-xl-9 ui-g-nopad">
 					<div class="ui-g">
-						<div class="ui-g-12 ui-lg-6 projects">
-							<div class="section-title">Location Distribution</div>
-							<div class="card project">
-								<div class="project-title"></div>
+						<div class="ui-g-12 ui-lg-6 payments">
+							<div class="card">
 								<ui:include src="chart_bar_location.xhtml" />
+							</div>
+						</div>
+
+						<div class="ui-g-12 ui-lg-6 projects">
+							<div class="card">
+								<ui:include src="chart_bar_location_price.xhtml" />
 							</div>
 						</div>
 
@@ -81,39 +77,34 @@
 					<div class="card service-box">
 						<i class="fas fa-bed"></i>
 						<div>
-							<span class="service-name">Average Bedrooms</span> <span
-								class="service-status">#{dataAnalysisBean.getBedroomAverage()}</span>
+							<span class="service-name">Average Bedrooms</span>
+							<span class="service-status">#{dataAnalysisBean.getBedroomAverage()}</span>
 						</div>
-						<p:commandButton type="button" value="Enable"
-							styleClass="success-btn" />
+						<p:commandButton type="button" value="Enable" styleClass="success-btn" />
 					</div>
 					<div class="card service-box">
 						<i class="fas fa-bath"></i>
 						<div>
-							<span class="service-name">Average Bathrooms</span> <span
-								class="service-status">1</span>
+							<span class="service-name">Average Bathrooms</span>
+							<span class="service-status">#{dataAnalysisBean.getBathroomAverage()}</span>
 						</div>
-						<p:commandButton type="button" value="Disable"
-							styleClass="danger-btn" />
+						<p:commandButton type="button" value="Enable" styleClass="success-btn" />
 					</div>
 					<div class="card service-box">
 						<i class="fas fa-water"></i>
 						<div>
-							<span class="service-name">In Suite Laundy</span> <span
-								class="service-status">#{dataAnalysisBean.getNumberSuitLaundry()}/#{dataAnalysisBean.dataWithValueSize}
-								properties</span>
+							<span class="service-name">In Suite Laundy</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberSuitLaundry()}/#{dataAnalysisBean.dataWithValueSize} properties</span>
 						</div>
-						<p:commandButton type="button" value="Enable"
-							styleClass="success-btn" />
+						<p:commandButton type="button" value="Enable" styleClass="success-btn" />
 					</div>
 					<div class="card service-box">
 						<i class="fas fa-car"></i>
 						<div>
-							<span class="service-name">Park Stall</span> <span
-								class="service-status">#{dataAnalysisBean.getNumberParkStall()}/#{dataAnalysisBean.dataWithValueSize}</span>
+							<span class="service-name">Park Stall</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberParkStall()}/#{dataAnalysisBean.dataWithValueSize}</span>
 						</div>
-						<p:commandButton type="button" value="Enable"
-							styleClass="success-btn" />
+						<p:commandButton type="button" value="Enable" styleClass="success-btn" />
 					</div>
 
 

@@ -1,8 +1,4 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
 
 	<ui:define name="title">Dashboard</ui:define>
 
@@ -14,7 +10,7 @@
 						<div class="intro-box-name intro-box-greeting">Vancouver Property Rental Data Analytics and Tool</div>
 						<div class="intro-box-detail">Boxplot Analysis</div>
 						<div class="intro-box-detail">
-						<p:separator></p:separator>
+							<p:separator></p:separator>
 						</div>
 
 					</div>
@@ -26,6 +22,13 @@
 						<div class="ui-g-12 ui-lg-6 projects">
 							<div class="section-title">Number of Bedrooms</div>
 							<div class="card project">
+								<h:form>
+									<h1>Calendar</h1>
+									<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="margin-top:10px">
+										<p:outputLabel value="Lower/Upper Limit:" />
+										<p:slider for="txt6,txt7" display="displayRange" range="true" displayTemplate="Between {min} and {max}" minValue="0" maxValue="50000" style="margin-top:15px" />
+									</p:panelGrid>
+								</h:form>
 								<div class="project-title">BOXPLOT CHART (OUTLIERS)</div>
 								<ui:include src="chart_boxplot_bdr.xhtml" />
 							</div>
