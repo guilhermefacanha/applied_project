@@ -15,7 +15,7 @@ public class WebCrawlerJob implements Job {
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		String format = "MMM dd, yyyy HH:mm";
 		System.out.println("============================================");
-		System.out.println("EXECUTING WEB CRAWLER JOB STARTED AT "+UtilFunctions.getStringDeData(new Date(), format));
+		System.out.println("EXECUTING WEB CRAWLER JOB STARTED AT "+UtilFunctions.getStringFromDate(new Date(), format));
 		System.out.println("============================================");
 
 		CraiglistRentalService craigService = new CraiglistRentalService();
@@ -30,7 +30,7 @@ public class WebCrawlerJob implements Job {
 		craigService.updateRentedProperties();
 		craigService.getDatabaseSize();
 		System.out.println("============================================");
-		System.out.println("EXECUTING WEB CRAWLER JOB ENDED AT "+UtilFunctions.getStringDeData(new Date(), format));
+		System.out.println("EXECUTING WEB CRAWLER JOB ENDED AT "+UtilFunctions.getStringFromDate(new Date(), format));
 		System.out.println("============================================");
 	}
 }

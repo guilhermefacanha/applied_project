@@ -1,7 +1,5 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
 	<div id="chart_bar_loc"></div>
 
 	<script type="text/javascript">
@@ -24,7 +22,10 @@
 		var data = [ trace1 ];
 
 		var layout = {
-			title : 'Properties by Location'
+			title : 'Properties by Location',
+			yaxis: {
+			    tickformat: ',.0f' // For more formatting types, see: https://github.com/d3/d3-format/blob/master/README.md#locale_format
+			  }
 		};
 
 		Plotly.newPlot('chart_bar_loc', data, layout);

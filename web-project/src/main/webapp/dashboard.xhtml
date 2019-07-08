@@ -5,8 +5,8 @@
 	<ui:define name="content">
 		<div class="layout-dashboard">
 			<div class="ui-g">
-				<div class="ui-g-12 ui-md-3">
-					<div class="intro-box">
+				<div class="ui-g-12">
+					<div class="intro-box ui-g-12">
 						<div class="intro-box-name intro-box-greeting">Vancouver Property Rental Data Analytics and Tool</div>
 						<div class="intro-box-detail">System Dashboard</div>
 						<div class="intro-box-detail">
@@ -18,8 +18,8 @@
 
 					</div>
 				</div>
-				<div class="ui-g-12 ui-md-9 intro-box-detail-container"></div>
-
+			</div>
+			<div class="ui-g">
 				<div class="ui-g-12 ui-md-6 ui-xl-3">
 					<div class="overview-box overview-box-views">
 						<p:graphicImage name="images/dashboard/asset-views.svg" library="olympia-layout" />
@@ -53,6 +53,19 @@
 						</div>
 					</div>
 				</div>
+				<div class="ui-g-12 ui-md-6 ui-xl-3">
+					<div class="overview-box overview-box-checkins overview-box-time">
+						<p:graphicImage name="images/dashboard/asset-template.png" library="olympia-layout" />
+						<i class="fas fa-calendar fa-2x"></i>
+						<div class="overview-box-content">
+							<div class="overview-box-title">TIME PERIOD ANALYSIS</div>
+							<div class="overview-box-details" style="font-size:18px">
+								<h:outputText value="From: #{dataAnalysisBean.minDate}" /><br/>
+								<h:outputText value="To: #{dataAnalysisBean.maxDate}" />
+							</div>
+						</div>
+					</div>
+				</div>
 
 				<div class="ui-g-12 ui-xl-9 ui-g-nopad">
 					<div class="ui-g">
@@ -73,7 +86,6 @@
 
 
 				<div class="ui-g-12 ui-xl-3">
-					<div class="section-title">Services</div>
 					<div class="card service-box">
 						<i class="fas fa-bed"></i>
 						<div>
@@ -91,23 +103,86 @@
 						<p:commandButton type="button" value="Enable" styleClass="success-btn" />
 					</div>
 					<div class="card service-box">
-						<i class="fas fa-water"></i>
+						<i class="fas fa-user-tie"></i>
 						<div>
-							<span class="service-name">In Suite Laundy</span>
-							<span class="service-status">#{dataAnalysisBean.getNumberSuitLaundry()}/#{dataAnalysisBean.dataWithValueSize} properties</span>
+							<span class="service-name">Professionaly Managed</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberStr('managed')}/#{dataAnalysisBean.dataWithValueSize} properties</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberPercent('managed')}</span>
 						</div>
 						<p:commandButton type="button" value="Enable" styleClass="success-btn" />
 					</div>
 					<div class="card service-box">
-						<i class="fas fa-car"></i>
+						<i class="fas fa-water"></i>
 						<div>
-							<span class="service-name">Park Stall</span>
-							<span class="service-status">#{dataAnalysisBean.getNumberParkStall()}/#{dataAnalysisBean.dataWithValueSize}</span>
+							<span class="service-name">In Suite Laundy</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberStr('laundry')}/#{dataAnalysisBean.dataWithValueSize} properties</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberPercent('laundry')}</span>
 						</div>
 						<p:commandButton type="button" value="Enable" styleClass="success-btn" />
 					</div>
-
-
+					<div class="card service-box">
+						<i class="fas fa-running"></i>
+						<div>
+							<span class="service-name">Amenities</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberStr('amenities')}/#{dataAnalysisBean.dataWithValueSize} properties</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberPercent('amenities')}</span>
+						</div>
+						<p:commandButton type="button" value="Enable" styleClass="success-btn" />
+					</div>
+					<div class="card service-box">
+						<i class="fas fa-couch"></i>
+						<div>
+							<span class="service-name">Furnished</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberStr('furnished')}/#{dataAnalysisBean.dataWithValueSize} properties</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberPercent('furnished')}</span>
+						</div>
+						<p:commandButton type="button" value="Enable" styleClass="success-btn" />
+					</div>
+					<div class="card service-box">
+						<i class="fas fa-parking"></i>
+						<div>
+							<span class="service-name">Park Stall</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberStr('park')}/#{dataAnalysisBean.dataWithValueSize} properties</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberPercent('park')}</span>
+						</div>
+						<p:commandButton type="button" value="Enable" styleClass="success-btn" />
+					</div>
+					<div class="card service-box">
+						<i class="fas fa-clock"></i>
+						<div>
+							<span class="service-name">Available Now</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberStr('now')}/#{dataAnalysisBean.dataWithValueSize} properties</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberPercent('now')}</span>
+						</div>
+						<p:commandButton type="button" value="Enable" styleClass="success-btn" />
+					</div>
+					<div class="card service-box">
+						<i class="fas fa-gift"></i>
+						<div>
+							<span class="service-name">Brand New</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberStr('new')}/#{dataAnalysisBean.dataWithValueSize} properties</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberPercent('new')}</span>
+						</div>
+						<p:commandButton type="button" value="Enable" styleClass="success-btn" />
+					</div>
+					<div class="card service-box">
+						<i class="fas fa-school"></i>
+						<div>
+							<span class="service-name">Near School</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberStr('school')}/#{dataAnalysisBean.dataWithValueSize} properties</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberPercent('school')}</span>
+						</div>
+						<p:commandButton type="button" value="Enable" styleClass="success-btn" />
+					</div>
+					<div class="card service-box">
+						<i class="fas fa-ban"></i>
+						<div>
+							<span class="service-name">No Pet Allowed</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberStr('nopet')}/#{dataAnalysisBean.dataWithValueSize} properties</span>
+							<span class="service-status">#{dataAnalysisBean.getNumberPercent('nopet')}</span>
+						</div>
+						<p:commandButton type="button" value="Enable" styleClass="success-btn" />
+					</div>
 
 				</div>
 

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
-	lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" lang="en">
 
 <h:head>
 	<f:facet name="first">
@@ -13,6 +12,8 @@
 	<h:outputScript name="js/nanoscroller.js" library="olympia-layout" />
 	<h:outputScript name="js/layout.js" library="olympia-layout" />
 	<script src="https://kit.fontawesome.com/4291e33fa8.js"></script>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="https://d3js.org/d3-format.v1.min.js"></script>
 	<ui:insert name="head" />
 </h:head>
 
@@ -40,15 +41,11 @@
 			<ui:include src="./footer.xhtml"></ui:include>
 		</div>
 
-		<p:ajaxStatus styleClass="layout-ajax-loader">
-			<f:facet name="start">
-				<i class="fa fa-circle-o-notch fa-spin layout-ajax-loader-icon" aria-hidden="true"></i>
-			</f:facet>
-
-			<f:facet name="complete">
-				<h:outputText value="" />
-			</f:facet>
+		<p:ajaxStatus onstart="PF('statusdlg').show();" oncomplete="PF('statusdlg').hide();" styleClass="layout-ajax-loader" style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">
 		</p:ajaxStatus>
+		<p:dialog modal="true" widgetVar="statusdlg" closable="false" resizable="false" draggable="false" showHeader="false">
+			<i class="fa fa-circle-o-notch fa-spin layout-ajax-loader-icon fa-loader" aria-hidden="true"></i>
+		</p:dialog>
 	</div>
 
 	<h:outputStylesheet name="css/nanoscroller.css" library="olympia-layout" />

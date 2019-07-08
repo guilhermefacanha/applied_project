@@ -35,7 +35,7 @@ public class AppConfigServlet extends HttpServlet {
 			Date dateAddMinute = UtilFunctions.getDateAddMinute(new Date(), 1);
 			String format = "MMM dd, yyyy HH:mm";
 			System.out.println("============================================");
-			System.out.println("Scheduling Job for "+UtilFunctions.getStringDeData(dateAddMinute,format));
+			System.out.println("Scheduling Job for "+UtilFunctions.getStringFromDate(dateAddMinute,format));
 			System.out.println("============================================");
 			Trigger trigger1 = TriggerBuilder.newTrigger()
 										.startAt(dateAddMinute)

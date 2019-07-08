@@ -39,7 +39,7 @@ public class PdfFormService implements Serializable{
 				PDTextField plate = (PDTextField) acroForm.getField("plate");
 				PDTextField observation = (PDTextField) acroForm.getField("observation");
 
-				String date = UtilFunctions.getStringDeData(new Date(), "MMM dd, yyyy");
+				String date = UtilFunctions.getStringFromDate(new Date(), "MMM dd, yyyy");
 				date1.setValue(date);
 				date2.setValue(date);
 

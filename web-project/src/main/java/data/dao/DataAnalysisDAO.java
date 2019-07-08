@@ -1,6 +1,7 @@
 package data.dao;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +14,7 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 
 import core.util.UtilFunctions;
+import data.enumeration.StatsOp;
 
 public class DataAnalysisDAO implements Serializable {
 
@@ -27,8 +29,10 @@ public class DataAnalysisDAO implements Serializable {
 	private static String pricesArray;
 	private static String bedroomsArray;
 
+	private static int lbd, ubd, lpr, upr;
+
 	public void refreshData() {
-		dataPriceAverage = getAverage("price");
+		dataPriceAverage = (Double) getAggregate("price", StatsOp.AVG);
 		populateDataSize();
 		populateDataSizeWithValue();
 		populateListProperties();
@@ -57,7 +61,7 @@ public class DataAnalysisDAO implements Serializable {
 
 	public double getDataPriceAverage() {
 		if (dataPriceAverage == 0.0)
-			dataPriceAverage = getAverage("price");
+			dataPriceAverage = (Double) getAggregate("price", StatsOp.AVG);
 		return dataPriceAverage;
 	}
 
@@ -67,17 +71,17 @@ public class DataAnalysisDAO implements Serializable {
 		return properties;
 	}
 
-	public String getPricesArray() {
-		if (pricesArray == null)
-			populatePricesArray();
+	public String getPricesArray(int lowerLevelPr, int upperLevelPr) {
+		if (pricesArray == null || lpr != lowerLevelPr || upr != upperLevelPr)
+			populatePricesArray(lowerLevelPr, upperLevelPr);
 
 		return pricesArray;
 	}
 
-	public String getBedroomsArray() {
-		if (bedroomsArray == null)
-			populateBedroomsArray();
-		
+	public String getBedroomsArray(int lowerLevelBd, int upperLevelBd) {
+		if (bedroomsArray == null || lbd != lowerLevelBd || ubd != upperLevelBd)
+			populateBedroomsArray(lowerLevelBd, upperLevelBd);
+
 		return bedroomsArray;
 	}
 
@@ -91,45 +95,41 @@ public class DataAnalysisDAO implements Serializable {
 			if (p.getLoc_vancouver() == 1) {
 				values[0] += 1;
 				averages[0] += p.getPrice();
-			}
-			else if (p.getLoc_burnaby() == 1){
+			} else if (p.getLoc_burnaby() == 1) {
 				values[1] += 1;
 				averages[1] += p.getPrice();
-			}
-			else if (p.getLoc_richmond() == 1) {
+			} else if (p.getLoc_richmond() == 1) {
 				values[2] += 1;
 				averages[2] += p.getPrice();
-			}
-			else if (p.getLoc_surrey() == 1) {
+			} else if (p.getLoc_surrey() == 1) {
 				values[3] += 1;
 				averages[3] += p.getPrice();
-			}
-			else if (p.getLoc_newwest() == 1) {
+			} else if (p.getLoc_newwest() == 1) {
 				values[4] += 1;
 				averages[4] += p.getPrice();
-			}
-			else if (p.getLoc_abbotsford() == 1) {
+			} else if (p.getLoc_abbotsford() == 1) {
 				values[5] += 1;
 				averages[5] += p.getPrice();
 			}
 		}
-		
+
 		for (int i = 0; i < averages.length; i++) {
 			averages[i] = averages[i] / values[i];
 		}
-		
+
 		StringBuffer str = new StringBuffer("[");
 		for (double d : values) {
 			str.append(d + ",");
 		}
-		String locValues = str.substring(0, str.length()-1)+"]";
-		
-		
+		String locValues = str.substring(0, str.length() - 1) + "]";
+
+		DecimalFormat df2 = new DecimalFormat("###.##");
+
 		str = new StringBuffer("[");
 		for (double d : averages) {
-			str.append(d + ",");
+			str.append(df2.format(d) + ",");
 		}
-		String locPriceValues = str.substring(0, str.length()-1)+"]";
+		String locPriceValues = str.substring(0, str.length() - 1) + "]";
 
 		locationDistribution[0] = labels;
 		locationDistribution[1] = locValues;
@@ -154,44 +154,55 @@ public class DataAnalysisDAO implements Serializable {
 	}
 
 	/**
-	 *  Example on query mongo command line
-	 *  db.property.aggregate(
-		[
-			{$match:{bath:{$lt:50000, $gt:0}}}, 
-			{$group:{_id: null, bath:{$avg:"$bath"}}}
-		]);
+	 * Example on query mongo command line db.property.aggregate( [
+	 * {$match:{bath:{$lt:50000, $gt:0}}}, {$group:{_id: null, bath:{$avg:"$bath"}}}
+	 * ]);
 	 * 
 	 * 
-	 * */
-	public double getAverage(String field) {
+	 */
+	public Object getAggregate(String field, StatsOp op, String filterField, double lowerValue, double upperValue) {
+		if (filterField == null)
+			filterField = field;
+
 		MongoCollection<Document> dbCollection = ResourcesDAO.getCollectionPropertyDocument();
-		Document query = Document.parse("{" 
-				+ "$match: {"
-				+ 	field + ": {$lt: 50000,$gt: 0}"
-				+ "	}" 
-				+ "}");
-		Document avg = Document
-				.parse("{$group: {_id: null,"+ field + ": {$avg: \"$" +field+"\"}}}");
-		AggregateIterable<Document> aggregate = dbCollection.aggregate(Arrays.asList(query, avg));
+		Document query = Document.parse(
+				"{" + "$match: {" + filterField + ": {$lt: " + upperValue + ",$gt: " + lowerValue + "}" + "	}" + "}");
+		Document aggregation = Document.parse(
+				"{$group: {_id: null," + field + ": {$" + op.toString().toLowerCase() + ": \"$" + field + "\"}}}");
+		AggregateIterable<Document> aggregate = dbCollection.aggregate(Arrays.asList(query, aggregation));
 		Document result = aggregate.first();
-		return result.getDouble(field);
+		return result.get(field);
 	}
 
-	private void populatePricesArray() {
-		StringBuffer str = new StringBuffer("[");
-		for (RentProperty p : getProperties()) {
-			str.append(p.getPrice() + ",");
-		}
-		pricesArray = str.substring(0, str.length()-1)+"]";
+	public Object getAggregate(String field, StatsOp op) {
+		return getAggregate(field, op, field, 0, 50000);
 	}
-	
-	private void populateBedroomsArray() {
+
+	public Object getAggregate(String field, StatsOp op, double lowerValue, double upperValue) {
+		return getAggregate(field, op, field, lowerValue, upperValue);
+	}
+
+	private void populatePricesArray(int lowerLevelPr, int upperLevelPr) {
+		lpr = lowerLevelPr;
+		upr = upperLevelPr;
 		StringBuffer str = new StringBuffer("[");
 		for (RentProperty p : getProperties()) {
-			str.append(p.getBedrooms() + ",");
+			if (p.getPrice() >= lpr && p.getPrice() <= upr)
+				str.append(p.getPrice() + ",");
 		}
-		bedroomsArray = str.substring(0, str.length()-1)+"]";
-		
+		pricesArray = str.substring(0, str.length() - 1) + "]";
+	}
+
+	private void populateBedroomsArray(int lowerLevelBd, int upperLevelBd) {
+		ubd = upperLevelBd;
+		lbd = lowerLevelBd;
+		StringBuffer str = new StringBuffer("[");
+		for (RentProperty p : getProperties()) {
+			if (p.getBedrooms() >= lbd && p.getBedrooms() <= ubd)
+				str.append(p.getBedrooms() + ",");
+		}
+		bedroomsArray = str.substring(0, str.length() - 1) + "]";
+
 	}
 
 }

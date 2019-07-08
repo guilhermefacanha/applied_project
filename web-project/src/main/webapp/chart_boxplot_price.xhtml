@@ -7,14 +7,14 @@
 			<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
 				<h:panelGroup>
 					<h:outputText value="Lower/Upper Limit Range: " />
-					<h:outputText id="displayRange" value="Range" style="font-size:16px" />
+					<h:outputText id="displayRangePr" value="Range" style="font-size:16px" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<p:panelGrid columns="1" layout="grid" styleClass="form-group ui-panelgrid-blank">
-						<p:slider for="txt6,txt7" display="displayRange" range="true" displayTemplate="Between {min} and {max}" minValue="0" maxValue="10" style="margin-top:15px" />
+						<p:slider for="txt_pr1,txt_pr2" display="displayRangePr" range="true" displayTemplate="Between {min} and {max}" minValue="0" maxValue="10000" style="margin-top:15px" step="50"/>
 					</p:panelGrid>
-					<h:inputHidden id="txt6" value="#{dataAnalysisBean.lowerLevelBd}" />
-					<h:inputHidden id="txt7" value="#{dataAnalysisBean.upperLevelBd}" />
+					<h:inputHidden id="txt_pr1" value="#{dataAnalysisBean.lowerLevelPr}" />
+					<h:inputHidden id="txt_pr2" value="#{dataAnalysisBean.upperLevelPr}" />
 				</h:panelGroup>
 			</p:panelGrid>
 			<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
@@ -24,23 +24,23 @@
 		</p:panelGrid>
 
 		<h:panelGroup id="pnlChart">
-			<h:panelGroup rendered="#{dataAnalysisBean.bdPlot}">
+			<h:panelGroup rendered="#{dataAnalysisBean.prPlot}">
 				<script type="text/javascript">
-				var yData = [ #{dataAnalysisBean.getBedroomsArray()}];
-				createChartBd(yData);
+				var yData = [ #{dataAnalysisBean.getPricesArray()}];
+				createChartPr(yData);
 				</script>
 			</h:panelGroup>
 
 		</h:panelGroup>
-		<div id="chart_boxplot_bdr"></div>
+		<div id="chart_boxplot_price"></div>
 
 	</h:form>
 
 	<script type="text/javascript">
 		/* <![CDATA[ */
 		
-		function createChartBd(yData){
-			var xData = [ 'Number of Bedrooms'];
+		function createChartPr(yData){
+			var xData = [ 'Rent Price'];
 
 			var colors = [ 'rgba(93, 164, 214, 0.5)', 'rgba(255, 144, 14, 0.5)',
 					'rgba(44, 160, 101, 0.5)', 'rgba(255, 65, 54, 0.5)',
@@ -75,7 +75,7 @@
 					autorange : true,
 					showgrid : true,
 					zeroline : true,
-					dtick : 1,
+					dtick : 500,
 					gridcolor : 'rgb(255, 255, 255)',
 					gridwidth : 1,
 					zerolinecolor : 'rgb(255, 255, 255)',
@@ -92,7 +92,7 @@
 				showlegend : false
 			};
 
-			Plotly.newPlot('chart_boxplot_bdr', data, layout, {
+			Plotly.newPlot('chart_boxplot_price', data, layout, {
 				showSendToCloud : false
 			});
 			

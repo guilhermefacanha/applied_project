@@ -125,7 +125,7 @@ public class AppConfig
 		String os = System.getProperty("os.name").toLowerCase();
 		if (os.contains("win")){
 			String tomcatDir = System.getProperty("catalina.base");
-			return tomcatDir+"\\logs\\localhost_access_log."+UtilFunctions.getStringDeData(new Date(), "yyyy-MM-dd")+".txt";
+			return tomcatDir+"\\logs\\localhost_access_log."+UtilFunctions.getStringFromDate(new Date(), "yyyy-MM-dd")+".txt";
 		}
 		else {
 			return "/tomcat/logs/catalina.out"; 

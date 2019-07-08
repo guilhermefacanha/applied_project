@@ -10,3 +10,33 @@
 	background: url("#{resource['img/data2.jpg']}") no-repeat;
 	background-size: 100% auto;
 }
+
+.overview-box{
+	max-height: 106px;
+}
+
+.overview-box-time{
+	background-color: #d9e2df !important;
+}
+
+.layout-dashboard .overview-box i{
+	position: absolute;
+    width: 98px;
+    height: 78px;
+    left: -1px;
+    top: 37%;
+    padding-right: 28px;
+}
+
+.fa-calendar{
+	color: #676b58;
+}
+
+.layout-footer .footer-icons a{
+	font-size: 18px;
+}
+
+.fa-loader{
+	color: red;
+    font-size: 30px;
+}

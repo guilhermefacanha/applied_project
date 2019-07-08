@@ -192,7 +192,7 @@ public class UtilFunctions {
 
 		return -1;
 	}
-	
+
 	public static Date getDateAddMinute(Date date, int add) {
 		DateTime time = new DateTime(date);
 		time = time.plusMinutes(add);
@@ -264,18 +264,18 @@ public class UtilFunctions {
 		}
 	}
 
-//	public static <T extends EntidadeBase> boolean isObjetoValido(T obj) {
-//		if (obj != null && obj.getId() > 0)
-//			return true;
-//		else
-//			return false;
-//	}
-//
-//	public static <T extends EntidadeBase> EntidadeBase toNullObject(T obj) {
-//		if (obj != null && obj.getId() == 0)
-//			obj = null;
-//		return obj;
-//	}
+	// public static <T extends EntidadeBase> boolean isObjetoValido(T obj) {
+	// if (obj != null && obj.getId() > 0)
+	// return true;
+	// else
+	// return false;
+	// }
+	//
+	// public static <T extends EntidadeBase> EntidadeBase toNullObject(T obj) {
+	// if (obj != null && obj.getId() == 0)
+	// obj = null;
+	// return obj;
+	// }
 
 	@SuppressWarnings("rawtypes")
 	public static boolean isListaValida(List lista) {
@@ -301,6 +301,24 @@ public class UtilFunctions {
 			res = "0" + res;
 
 		return res;
+	}
+
+	public static String formatNumber(double number, int minPosition, int maxPosition) {
+		NumberFormat f = NumberFormat.getInstance();
+		f.setMaximumFractionDigits(maxPosition);
+		f.setMinimumFractionDigits(minPosition);
+		return f.format(number);
+
+	}
+
+	public static String formatPercent(double number, int minPosition, int maxPosition) {
+		NumberFormat f = NumberFormat.getInstance();
+		f.setMaximumFractionDigits(maxPosition);
+		f.setMinimumFractionDigits(minPosition);
+		if (number < 1)
+			number = number * 100;
+		return f.format(number) + "%";
+
 	}
 
 	public static String formatarValor(double valor) {
@@ -381,7 +399,7 @@ public class UtilFunctions {
 		return "";
 	}
 
-	public static String getStringDeData(Date data, String formato) {
+	public static String getStringFromDate(Date data, String formato) {
 		DateFormat formatter = new SimpleDateFormat(formato);
 		return formatter.format(data).toString();
 	}
@@ -572,23 +590,24 @@ public class UtilFunctions {
 		app.getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, pagina);
 	}
 
-//	public static void irPara(String pagina, String param) {
-//		try {
-//			String app = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
-//			pagina = app + pagina + "." + AppConfig.getSufixo_url();
-//			if (!UtilFunctions.isNullEmpty(param))
-//				pagina += "?" + param;
-//			FacesContext.getCurrentInstance().getExternalContext().redirect(pagina);
-//			FacesContext.getCurrentInstance().responseComplete();
-//
-//		} catch (Exception e) {
-//			UtilFunctions.adicionarMsg(e.getMessage(), true);
-//		}
-//	}
+	// public static void irPara(String pagina, String param) {
+	// try {
+	// String app =
+	// FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+	// pagina = app + pagina + "." + AppConfig.getSufixo_url();
+	// if (!UtilFunctions.isNullEmpty(param))
+	// pagina += "?" + param;
+	// FacesContext.getCurrentInstance().getExternalContext().redirect(pagina);
+	// FacesContext.getCurrentInstance().responseComplete();
+	//
+	// } catch (Exception e) {
+	// UtilFunctions.adicionarMsg(e.getMessage(), true);
+	// }
+	// }
 
-//	public static void irPara(String pagina) {
-//		irPara(pagina, null);
-//	}
+	// public static void irPara(String pagina) {
+	// irPara(pagina, null);
+	// }
 
 	/**
 	 * Remover acentuacao de Strings
@@ -611,11 +630,13 @@ public class UtilFunctions {
 		return nome;
 	}
 
-//	// EXEMPLO DE ACESSO A BEANS DE SESSAO
-//	public static Usuario getUsuarioLogado(FacesContext context) {
-//		return ((UsuarioLogadoBean) context.getApplication().evaluateExpressionGet(context, "#{usuarioLogadoBean}",
-//				UsuarioLogadoBean.class)).getUsuario();
-//	}
+	// // EXEMPLO DE ACESSO A BEANS DE SESSAO
+	// public static Usuario getUsuarioLogado(FacesContext context) {
+	// return ((UsuarioLogadoBean)
+	// context.getApplication().evaluateExpressionGet(context,
+	// "#{usuarioLogadoBean}",
+	// UsuarioLogadoBean.class)).getUsuario();
+	// }
 
 	public static void putFlash(String chave, Object objeto) {
 		FacesContext.getCurrentInstance().getExternalContext().getFlash().put(chave, objeto);
@@ -655,7 +676,7 @@ public class UtilFunctions {
 		String nomeArquivo = UtilFunctions.removerAcentuacao(file.getFileName());
 		String extensaoArquivo = UtilFunctions.getExtensaoArquivo(nomeArquivo);
 		nomeArquivo = nomeArquivo.replace(extensaoArquivo, "");
-		nomeArquivo = nomeArquivo + UtilFunctions.getStringDeData(new Date(), "_ddMMyyyyHHmmss") + extensaoArquivo;
+		nomeArquivo = nomeArquivo + UtilFunctions.getStringFromDate(new Date(), "_ddMMyyyyHHmmss") + extensaoArquivo;
 		String tempFilePath = AppConfig.getCaminhoRepositorioTmp() + File.separator + nomeArquivo;
 		File f = new File(tempFilePath);
 		verificarDiretorio(f.getParentFile());
@@ -675,8 +696,8 @@ public class UtilFunctions {
 	}
 
 	public static String formatarNomeShape(String nome) {
-		nome = nome.replace(UtilFunctions.getExtensaoArquivo(nome), "").replaceAll("-", "").replace(",", "").replace(".", "")
-				.replaceAll("\\s+", " ");
+		nome = nome.replace(UtilFunctions.getExtensaoArquivo(nome), "").replaceAll("-", "").replace(",", "")
+				.replace(".", "").replaceAll("\\s+", " ");
 		nome = Normalizer.normalize(nome.replace(UtilFunctions.getExtensaoArquivo(nome), ""), Normalizer.Form.NFD)
 				.replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replaceAll(" ", "_");
 		nome = "s_" + nome;
