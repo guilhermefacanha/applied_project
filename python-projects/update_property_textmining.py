@@ -38,7 +38,12 @@ for property in rows:
     property = propertyService.tryGetBathFromDescription(property) 
         
     sentences = [] if 'fullDescription' not in property else propertyService.getSentences(str(property['fullDescription']))
-    property = propertyService.populateTokens(property, sentences);
+    property = propertyService.populateTokens(property, sentences)
+    property = propertyService.verifyBasement(property)
+    
+    if property['bedrooms'] == 0 and property['no_basement'] == 0:
+            property['bedrooms'] = 1;
+    
     if('update' in property and property['update']==True):
         print(property['_id'], ' - ', property['bedrooms'], 'bdr ', property['size_sqft'], 'sqft ')
         newValues = { "$set": {
@@ -54,7 +59,9 @@ for property in rows:
             "near_school":property['near_school'],
             "brand_new":property['brand_new'],
             "no_basement":property['no_basement'],
-            "furnished":property['furnished']
+            "furnished":property['furnished'],
+            "no_basement": property['no_basement'],
+            "bsmt_analyzed": 1 
             }}
         dao.updateProperty(property['_id'], newValues)
     count += 1

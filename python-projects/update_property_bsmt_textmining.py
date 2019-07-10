@@ -19,7 +19,7 @@ for property in rows:
     property = propertyService.verifyBasement(property) 
     if property['update'] == True:
         print(property['_id'], ' - bedrooms:',property['bedrooms'],' - update basement')
-        if property['bedrooms']:
+        if property['bedrooms'] == 0:
             property['bedrooms'] = 1;
         newvalues = { "$set": 
                      {
@@ -28,7 +28,7 @@ for property in rows:
                          "bsmt_analyzed": 1 
                       } 
                      }
-        dao.updateProperty(property['_id'], newvalues);
+        #dao.updateProperty(property['_id'], newvalues);
     count += 1
     try:
         if count % 300 == 0:
