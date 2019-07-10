@@ -16,8 +16,7 @@
 		background-color: transparent;
 		background: url("#{resource['img/data4.png']}") no-repeat;
 	}
-	.layout-wrapper.layout-topbar-bluegrey .layout-topbar .layout-menu-button
-		{
+	.layout-wrapper.layout-topbar-bluegrey .layout-topbar .layout-menu-button{
 		margin-top: 40px;
 		position: absolute;
 		left: -20px;
@@ -34,7 +33,6 @@
 	}
 }
 
-}
 .overview-box {
 	max-height: 106px;
 }

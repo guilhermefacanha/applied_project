@@ -86,15 +86,15 @@ public class DataAnalysisBean implements Serializable {
 	}
 
 	public String getBedroomAverage() {
-		double number = (Double) dao.getAggregate("bedrooms", StatsOp.AVG);
+		double number = (Double) dao.getAggregate("bedrooms", StatsOp.AVG, "bedrooms", 0, 10);
 		return UtilFunctions.formatNumber(number, 2, 2);
 	}
 
 	public String getBathroomAverage() {
-		double number = (Double) dao.getAggregate("bath", StatsOp.AVG, "bath", 1, 10);
+		double number = (Double) dao.getAggregate("bath", StatsOp.AVG, "bath", 0, 10);
 		return UtilFunctions.formatNumber(number, 2, 2);
 	}
-	
+
 	public String getNumberPercent(String field) {
 		double number = Double.valueOf(getNumber(field)) / dao.getDataSizeWithValue();
 		return UtilFunctions.formatPercent(number, 2, 2);
@@ -103,28 +103,27 @@ public class DataAnalysisBean implements Serializable {
 	public String getNumberStr(String field) {
 		return NumberFormat.getInstance().format(getNumber(field));
 	}
-	
+
 	public long getNumber(String field) {
 		if (field.equals("furnished"))
 			return dao.getProperties().stream().filter(p -> p.getFurnished() == 1).count();
-		else if(field.equals("new"))
+		else if (field.equals("new"))
 			return dao.getProperties().stream().filter(p -> p.getBrand_new() == 1).count();
-		else if(field.equals("laundry"))
+		else if (field.equals("laundry"))
 			return dao.getProperties().stream().filter(p -> p.getSuit_laundry() == 1).count();
-		else if(field.equals("park"))
+		else if (field.equals("park"))
 			return dao.getProperties().stream().filter(p -> p.getPark_stall() == 1).count();
-		else if(field.equals("amenities"))
+		else if (field.equals("amenities"))
 			return dao.getProperties().stream().filter(p -> p.getAmenities() == 1).count();
-		else if(field.equals("school"))
+		else if (field.equals("school"))
 			return dao.getProperties().stream().filter(p -> p.getNear_school() == 1).count();
-		else if(field.equals("now"))
+		else if (field.equals("now"))
 			return dao.getProperties().stream().filter(p -> p.getAvailable_now() == 1).count();
-		else if(field.equals("nopet"))
+		else if (field.equals("nopet"))
 			return dao.getProperties().stream().filter(p -> p.getNo_pet_allowed() == 1).count();
-		else if(field.equals("managed"))
+		else if (field.equals("managed"))
 			return dao.getProperties().stream().filter(p -> p.getProfessionally_managed() == 1).count();
-		
-		
+
 		return 0;
 	}
 
