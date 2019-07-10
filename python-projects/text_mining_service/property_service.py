@@ -261,6 +261,25 @@ class PropertyService:
                 
         return property;
     
+    def verifyBasement(self, property):
+        desc = str(property['characteristics']).lower() + ' ' + str(property['title']).lower() + ' ' + str(property['fullDescription']).lower() if 'fullDescription' in property else str(property['characteristics']).lower() + ' ' + str(property['title']).lower()  # parse the texto to lowercase
+        desc = desc.replace('\\xc2',' ').replace('\\xa0',' ') #clean dirty
+        desc = desc.replace('&nbsp;',' ').replace('+', ' ').replace('/', ' ').replace('-', ' ') #clean dirty
+        desc = desc.replace('full','').replace('private','').replace('  ',' ') #replace word full there is found between the bathroom word and number
+        
+        bsmt_words = ['bsmt','basement'];
+        
+        if any(w in desc for w in bsmt_words):
+            property['no_basement'] = 0
+            property['update'] = 1
+        else:
+            property['no_basement'] = 1
+            property['update'] = 1
+            
+        
+        return property;
+        
+        
     def tryGetBathFromDescription(self, property):
         property['update'] = False
         numbers = ['one', 'two', 'three', 'four', 'five']  # writed numbers to be found

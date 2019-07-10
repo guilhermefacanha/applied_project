@@ -22,11 +22,20 @@ print("Loaded Records: ", len(rows))
 size = len(rows)
 count = 0
 for property in rows:
+    
+    #get number of bedrooms and size from characteristics field
     property = propertyService.populateRoomSize(property)
+    
+    #get number of bedrooms from description text
     if property['bedrooms'] == 0:
         property = propertyService.tryGetBedroomFromDescription(property)
+    
+    #get number of bedrooms from description text
     if property['size_sqft'] == 0:
         property = propertyService.tryGetSizeFromDescription(property)
+    
+    #get number of bathrooms out of advertisement
+    property = propertyService.tryGetBathFromDescription(property) 
         
     sentences = [] if 'fullDescription' not in property else propertyService.getSentences(str(property['fullDescription']))
     property = propertyService.populateTokens(property, sentences);
@@ -35,6 +44,7 @@ for property in rows:
         newValues = { "$set": {
             "bedrooms":property['bedrooms'],
             "size_sqft":property['size_sqft'],
+            "bath":property['bath'],
             "professionally_managed":property['professionally_managed'],
             "no_pet_allowed":property['no_pet_allowed'],
             "suit_laundry":property['suit_laundry'],

@@ -91,7 +91,7 @@ public class DataAnalysisBean implements Serializable {
 	}
 
 	public String getBathroomAverage() {
-		double number = (Double) dao.getAggregate("bath", StatsOp.AVG);
+		double number = (Double) dao.getAggregate("bath", StatsOp.AVG, "bath", 1, 10);
 		return UtilFunctions.formatNumber(number, 2, 2);
 	}
 	
