@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.csis.data</groupId>
 	<artifactId>websystem</artifactId>
-	<version>0.0.3</version>
+	<version>3.0.1</version>
 	<packaging>war</packaging>
 	<name>rentaldata</name>
 
@@ -120,13 +120,6 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.3.1</version>
-		</dependency>
-		
-		<!-- Manifest reader -->
-		<dependency>
-			<groupId>com.jcabi</groupId>
-			<artifactId>jcabi-manifests</artifactId>
-			<version>1.1</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.squareup.okhttp/okhttp -->

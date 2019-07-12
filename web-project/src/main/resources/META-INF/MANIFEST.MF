@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-project-name: rentaldata
-Archiver-Version: Plexus Archiver
-Built-By: limafacanhag
-project-date: 2019-07-09T21:36:07Z
-project-version: 0.0.3
-Created-By: Apache Maven 3.3.9
-Build-Jdk: 1.8.0_144
-

@@ -49,6 +49,7 @@ public class RentProperty implements Serializable {
 	private double loc_surrey;
 	private double loc_newwest;
 	private double loc_abbotsford;
+	private double loc_other;
 	private double no_basement = -1;
 	private double gradient_boost;
 	private double gradient_xgb;
