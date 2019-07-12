@@ -15,6 +15,8 @@ dao = PropertiesDao()
 propertyService = PropertyService()
 sklearnService = SkLearnService()
 
+print('=====Property Fields Update Textmining=====')
+
 #rows = dao.getAllProperties(1000)
 rows = dao.getAllPropertiesWithQuery({"$or":[{"bedrooms":None},{"bedrooms":0}]});
 print("Loaded Records: ", len(rows)) 

@@ -83,6 +83,7 @@ class PropertyService:
         property['loc_richmond'] = 0
         property['loc_surrey'] = 0
         property['loc_abbotsford'] = 0
+        property['loc_other'] = 0
         
         if('vancouver' in location or location == 'stanley park' or location == 'downtown' or location == 'granville'):
             property['loc_vancouver'] = 1
@@ -96,6 +97,8 @@ class PropertyService:
             property['loc_richmond'] = 1
         elif location == 'abbotsford':
             property['loc_abbotsford'] = 1
+        else:
+            property['loc_other'] = 1
             
         self.location = location
     
