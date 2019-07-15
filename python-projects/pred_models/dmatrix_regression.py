@@ -7,15 +7,16 @@ import pandas as pd
 import numpy as np
 import statsmodels.api as sm
 import datetime
+import xgboost as xg
 
 from sklearn import metrics
 from bson.objectid import ObjectId
 from db.propertiesdao import PropertiesDao
 
-def saveModelData(performance, mean_error, summary):
+def saveModelData(performance, mean_error, summary=''):
     data = {};
     data['_id'] = str(ObjectId())
-    data['model'] = 'OLS Regression'
+    data['model'] = 'DMatrix Regression'
     data['file'] = filename
     data['chart'] = chartfilename
     data['date'] = datetime.datetime.utcnow()
@@ -33,8 +34,8 @@ dtstamp = x.strftime("%Y%m%d")
 
 # Files variables
 path = 'data/'
-filename = 'reg_ols_model_'+dtstamp+'.sav'
-chartfilename = 'reg_ols_model_pred_chart_'+dtstamp+'.png'
+filename = 'reg_dmatrix_model_'+dtstamp+'.sav'
+chartfilename = 'reg_dmatrix_model_pred_chart_'+dtstamp+'.png'
 
 save = False
 
@@ -44,8 +45,9 @@ dataset = dao.getDataSetModel()
 dataset = pd.DataFrame.from_dict(dataset)
 print('Dataset Acquired: (',len(dataset),')')
 
-# define the data/predictors as the pre-set feature names  
-df = dataset[['bedrooms', 'bath', 'size_sqft', 'professionally_managed', 'no_pet_allowed', 'suit_laundry', 'park_stall', 'available_now', 'furnished', 'amenities', 'brand_new','loc_vancouver', 'loc_burnaby', 'loc_richmond', 'loc_surrey', 'loc_newwest', 'loc_abbotsford', 'loc_other','no_basement']]
+# define the data/predictors as the pre-set feature names
+names = ['bedrooms', 'bath', 'size_sqft', 'professionally_managed', 'no_pet_allowed', 'suit_laundry', 'park_stall', 'available_now', 'furnished', 'amenities', 'brand_new','loc_vancouver', 'loc_burnaby', 'loc_richmond', 'loc_surrey', 'loc_newwest', 'loc_abbotsford', 'loc_other','no_basement']  
+df = dataset[names]
 
 # Put the target (housing value -- MEDV) in another DataFrame
 target = dataset[['price']]
@@ -57,30 +59,33 @@ y = target["price"]
 print('======================================================')
 try:
     model = pickle.load(open(path+filename, 'rb'))
-    print('Regression model loaded from saved data file')
+    print('Regression DMatrix model loaded from saved data file')
 except:
-    print('Calculating regression model')
-    model = sm.OLS(y, X).fit()
+    print('Calculating DMatrix Regression Model')
+    params = {'max_depth':3,
+    'min_child_weight':10,
+    'learning_rate':0.3,
+    'subsample':0.5,
+    'colsample_bytree':0.6,
+    'obj':'reg:linear',
+    'n_estimators':1000,
+    'eta':0.3}
+    dmatrix = xg.DMatrix(X, target.values, feature_names=names)
+    model = xg.train(params, dmatrix)
     pickle.dump(model, open(path+filename, 'wb'))
-    print('Regression Model exported to: ', path+filename)
+    print('Regression Model DMatrix exported to: ', path+filename)
     save = True
 print('======================================================')
 
-predictions = model.predict(X)  # make the predictions by the model
-
-#save predictions to csv uncomment if needed
-#dataset['prediction'] = predictions;
-#dataset.to_csv('../data/result.csv')
+dtest = xg.DMatrix(X, label='')
+predictions = model.predict(dtest)  # make the predictions by the model
 
 # Print out the statistics
-summary = model.summary()
-print(summary)
-print(model.conf_int())
 print('Mean: ', statistics.mean(y))
 print('Mean Absolute Error:', metrics.mean_absolute_error(y, predictions))  
 print('Mean Squared Error:', metrics.mean_squared_error(y, predictions))
-mean_error = np.sqrt(metrics.mean_squared_error(y, predictions))
-print('Root Mean Squared Error:', mean_error)
+rmse = np.sqrt(metrics.mean_squared_error(y, predictions))
+print('Root Mean Squared Error:', rmse)
 perf = 1 - (np.sqrt(metrics.mean_squared_error(y, predictions)) / statistics.mean(y))
 perf = perf * 100
 print('Performance ', perf, '%')
@@ -89,20 +94,20 @@ print('Performance ', perf, '%')
 # Plot
 test = pd.DataFrame({"prediction": predictions, "observed": y})
 lowess = sm.nonparametric.lowess
-z = lowess(predictions.values.flatten(), y)
+z = lowess(predictions.flatten(), y)
 test.plot(figsize = [14,8],
           x ="prediction", y = "observed", kind = "scatter", color = 'darkred')
-plt.title("Regression OLS Model: Prediction Vs Test Data", fontsize = 18, color = "darkgreen")
+plt.title("Extreme Gradient Boosting: Prediction Vs Test Data", fontsize = 18, color = "darkgreen")
 plt.xlabel("Predicted Power Output", fontsize = 18) 
 plt.ylabel("Observed Power Output", fontsize = 18)
 plt.plot(z[:,0], z[:,1], color = "blue", lw= 3)
 
 if(save == True):
     plt.savefig(path+chartfilename)
-    saveModelData(perf,mean_error,str(summary))
+    saveModelData(perf,rmse)
 
 print()
-print('Model Calculation Finished')
+print('Model DMatrix Calculation Finished')
 print()
 print('======================================================')
 

@@ -7,17 +7,19 @@ import pandas as pd
 import numpy as np
 import statsmodels.api as sm
 import datetime
+import xgboost as xg
 
 from sklearn import metrics
 from bson.objectid import ObjectId
 from db.propertiesdao import PropertiesDao
 
-def saveModelData(performance, mean_error, summary):
+def saveModelData(performance, mean_error, summary=''):
     data = {};
     data['_id'] = str(ObjectId())
-    data['model'] = 'OLS Regression'
+    data['model'] = 'XGB Linear Regression'
     data['file'] = filename
     data['chart'] = chartfilename
+    data['chart2'] = chartfilename2
     data['date'] = datetime.datetime.utcnow()
     data['performance'] = performance
     data['mean_error'] = mean_error
@@ -33,8 +35,9 @@ dtstamp = x.strftime("%Y%m%d")
 
 # Files variables
 path = 'data/'
-filename = 'reg_ols_model_'+dtstamp+'.sav'
-chartfilename = 'reg_ols_model_pred_chart_'+dtstamp+'.png'
+filename = 'reg_xgb_linear_model_'+dtstamp+'.sav'
+chartfilename = 'reg_xgb_linear_model_pred_chart_'+dtstamp+'.png'
+chartfilename2 = 'reg_xgb_linear_model_importance_chart_'+dtstamp+'.png'
 
 save = False
 
@@ -44,8 +47,9 @@ dataset = dao.getDataSetModel()
 dataset = pd.DataFrame.from_dict(dataset)
 print('Dataset Acquired: (',len(dataset),')')
 
-# define the data/predictors as the pre-set feature names  
-df = dataset[['bedrooms', 'bath', 'size_sqft', 'professionally_managed', 'no_pet_allowed', 'suit_laundry', 'park_stall', 'available_now', 'furnished', 'amenities', 'brand_new','loc_vancouver', 'loc_burnaby', 'loc_richmond', 'loc_surrey', 'loc_newwest', 'loc_abbotsford', 'loc_other','no_basement']]
+# define the data/predictors as the pre-set feature names
+names = ['bedrooms', 'bath', 'size_sqft', 'professionally_managed', 'no_pet_allowed', 'suit_laundry', 'park_stall', 'available_now', 'furnished', 'amenities', 'brand_new','loc_vancouver', 'loc_burnaby', 'loc_richmond', 'loc_surrey', 'loc_newwest', 'loc_abbotsford', 'loc_other','no_basement']  
+df = dataset[names]
 
 # Put the target (housing value -- MEDV) in another DataFrame
 target = dataset[['price']]
@@ -57,30 +61,42 @@ y = target["price"]
 print('======================================================')
 try:
     model = pickle.load(open(path+filename, 'rb'))
-    print('Regression model loaded from saved data file')
+    print('Regression Model XGB Linear loaded from saved data file')
 except:
-    print('Calculating regression model')
-    model = sm.OLS(y, X).fit()
+    print('Calculating Model XGB Linear Regression')
+    max_depth = 20
+    min_child_weight = 10
+    subsample = 0.5
+    colsample_bytree = 0.6
+    objective = 'reg:linear'
+    num_estimators = 100
+    learning_rate = 0.3
+    model = xg.XGBRegressor(max_depth=max_depth,
+                min_child_weight=min_child_weight,
+                subsample=subsample,
+                colsample_bytree=colsample_bytree,
+                objective=objective,
+                n_estimators=num_estimators,
+                learning_rate=learning_rate,
+                n_jobs=4)
+    eval_metric = ["auc","error"]
+    model.fit(X, y, eval_metric=eval_metric, verbose=True)
     pickle.dump(model, open(path+filename, 'wb'))
-    print('Regression Model exported to: ', path+filename)
+    print('Regression Model XGB Linear exported to: ', path+filename)
     save = True
 print('======================================================')
 
 predictions = model.predict(X)  # make the predictions by the model
 
-#save predictions to csv uncomment if needed
-#dataset['prediction'] = predictions;
-#dataset.to_csv('../data/result.csv')
+plot_importance = xg.plot_importance(model)
+plt.savefig(path+chartfilename2)
 
 # Print out the statistics
-summary = model.summary()
-print(summary)
-print(model.conf_int())
 print('Mean: ', statistics.mean(y))
 print('Mean Absolute Error:', metrics.mean_absolute_error(y, predictions))  
 print('Mean Squared Error:', metrics.mean_squared_error(y, predictions))
-mean_error = np.sqrt(metrics.mean_squared_error(y, predictions))
-print('Root Mean Squared Error:', mean_error)
+rmse = np.sqrt(metrics.mean_squared_error(y, predictions))
+print('Root Mean Squared Error:', rmse)
 perf = 1 - (np.sqrt(metrics.mean_squared_error(y, predictions)) / statistics.mean(y))
 perf = perf * 100
 print('Performance ', perf, '%')
@@ -89,20 +105,21 @@ print('Performance ', perf, '%')
 # Plot
 test = pd.DataFrame({"prediction": predictions, "observed": y})
 lowess = sm.nonparametric.lowess
-z = lowess(predictions.values.flatten(), y)
+z = lowess(predictions.flatten(), y)
 test.plot(figsize = [14,8],
           x ="prediction", y = "observed", kind = "scatter", color = 'darkred')
-plt.title("Regression OLS Model: Prediction Vs Test Data", fontsize = 18, color = "darkgreen")
+plt.title("Extreme Gradient Boosting: Prediction Vs Test Data", fontsize = 18, color = "darkgreen")
 plt.xlabel("Predicted Power Output", fontsize = 18) 
 plt.ylabel("Observed Power Output", fontsize = 18)
 plt.plot(z[:,0], z[:,1], color = "blue", lw= 3)
 
 if(save == True):
     plt.savefig(path+chartfilename)
-    saveModelData(perf,mean_error,str(summary))
+    saveModelData(perf,rmse)
+
 
 print()
-print('Model Calculation Finished')
+print('Model XGB Linear Regression Calculation Finished')
 print()
 print('======================================================')
 

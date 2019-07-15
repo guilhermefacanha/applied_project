@@ -1,3 +1,5 @@
+#run with python -m pred_models.xgb_regression
+
 import xgboost as xgb
 import pandas as pd
 import numpy as np
@@ -13,7 +15,7 @@ from sklearn.metrics import mean_squared_error
 from bson.objectid import ObjectId
 from db.propertiesdao import PropertiesDao
 
-def saveModelData(performance, mean_error):
+def saveModelData(performance, mean_error, summary=''):
     data = {};
     data['_id'] = str(ObjectId())
     data['model'] = 'XGBRegressor'
@@ -22,6 +24,7 @@ def saveModelData(performance, mean_error):
     data['date'] = datetime.datetime.utcnow()
     data['performance'] = performance
     data['mean_error'] = mean_error
+    data['summary'] = summary
     dao.saveModel(data)
 
 
@@ -33,14 +36,15 @@ x = datetime.datetime.now()
 dtstamp = x.strftime("%Y%m%d")
 
 # Files variables
-path = '../data/'
-filename = 'grad_model'+dtstamp+'.sav'
-chartfilename = 'grad_model'+dtstamp+'.png'
+path = 'data/'
+filename = 'grad_xgb_model'+dtstamp+'.sav'
+chartfilename = 'grad_xgb_model'+dtstamp+'.png'
+chartfilename2 = 'grad_xgb_model_importance'+dtstamp+'.png'
 
 save = False
 
 # Load data
-dataset = dao.getAllPropertiesWithQuery({"bedrooms":{"$gt":0},"price":{"$gt":0},"price":{"$lt":8000},"bath":{"$ne":None},"size_sqft":{"$ne":None}}) # bedrooms > 0 and bedrooms < 5 and size_sqft < 5000 and price < 6000 and bath < 5
+dataset = dao.getDataSetModel()
 dataset = pd.DataFrame.from_dict(dataset)
 print('Dataset Acquired: (',len(dataset),')')
 
@@ -76,7 +80,7 @@ try:
 except:
     print('Calculating Gradient Boosting XGBRegressor')
     
-    grid_model = GridSearchCV(estimator = gbm, param_grid = gbm_param_grid, scoring = 'neg_mean_squared_error', cv = 5, verbose = 1)
+    grid_model = GridSearchCV(estimator = gbm, param_grid = gbm_param_grid, scoring = 'neg_mean_squared_error', cv = 5, n_jobs= 4, verbose = 1)
     grid_model.fit(X, y)
     print("Best parameters found: ",grid_model.best_params_)
     print("Lowest RMSE found: ", np.sqrt(np.abs(grid_model.best_score_)))
@@ -89,6 +93,7 @@ print('======================================================')
 
 #Predict using the test data
 pred = grid_model.predict(X)
+
 print("Root mean square error for test dataset: {}".format(np.round(np.sqrt(mean_squared_error(y, pred)), 2)))
 mean = statistics.mean(y.flatten())
 print('Mean: ', mean)
@@ -111,7 +116,7 @@ plt.plot(z[:,0], z[:,1], color = "blue", lw= 3)
 
 if(save == True):
     plt.savefig(path+chartfilename)
-    saveModelData(perf,rmse)
+    saveModelData(perf,rmse,grid_model.best_params_)
 #plt.show() uncomment to show plot in screen
 
 print()

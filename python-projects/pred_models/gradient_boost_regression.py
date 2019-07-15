@@ -1,3 +1,5 @@
+#run with python -m pred_models.gradient_boost_regression.py
+
 import numpy as np
 import statistics
 import matplotlib.pyplot as plt
@@ -11,15 +13,18 @@ from sklearn.metrics import mean_squared_error
 from db.propertiesdao import PropertiesDao
 from bson.objectid import ObjectId
 
-def saveModelData(performance, mean_error):
+def saveModelData(performance, mean_error, summary = ''):
     data = {};
     data['_id'] = str(ObjectId())
     data['model'] = 'GradientBoostingRegressor'
     data['file'] = filename
     data['chart'] = chartfilename
+    data['chart2'] = chartfilename2
+    data['chart3'] = chartfilename3
     data['date'] = datetime.datetime.utcnow()
     data['performance'] = performance
     data['mean_error'] = mean_error
+    data['summary'] = summary
     dao.saveModel(data)
 
 # #############################################################################
@@ -30,19 +35,22 @@ x = datetime.datetime.now()
 dtstamp = x.strftime("%Y%m%d")
 
 # Files variables
-path = '../data/'
-filename = 'grad_2_model_'+dtstamp+'.sav'
-chartfilename = 'grad_2_model_pred_chart_'+dtstamp+'.png'
+path = 'data/'
+filename = 'grad_boost_model_'+dtstamp+'.sav'
+chartfilename = 'grad_boost_model_pred_chart_'+dtstamp+'.png'
+chartfilename2 = 'grad_boost_model_dev_chart_'+dtstamp+'.png'
+chartfilename3 = 'grad_boost_model_importance_chart_'+dtstamp+'.png'
 
 save = False
 
 # Load data
-dataset = dao.getAllPropertiesWithQuery({"bedrooms":{"$gt":0},"price":{"$gt":0},"price":{"$lt":8000},"bath":{"$ne":None},"size_sqft":{"$ne":None}}) # bedrooms > 0 and bedrooms < 5 and size_sqft < 5000 and price < 6000 and bath < 5
+dataset = dao.getDataSetModel(1000)
 dataset = pd.DataFrame.from_dict(dataset)
 print('Dataset Acquired: (',len(dataset),')')
 
-# define the data/predictors as the pre-set feature names  
-df = dataset[['bedrooms', 'bath', 'size_sqft', 'professionally_managed', 'no_pet_allowed', 'suit_laundry', 'park_stall', 'available_now', 'furnished', 'amenities', 'brand_new','loc_vancouver', 'loc_burnaby', 'loc_richmond', 'loc_surrey', 'loc_newwest', 'loc_abbotsford', 'no_basement']]
+# define the data/predictors as the pre-set feature names
+names = ['bedrooms', 'bath', 'size_sqft', 'professionally_managed', 'no_pet_allowed', 'suit_laundry', 'park_stall', 'available_now', 'furnished', 'amenities', 'brand_new','loc_vancouver', 'loc_burnaby', 'loc_richmond', 'loc_surrey', 'loc_newwest', 'loc_abbotsford', 'no_basement']
+df = dataset[names]
 
 # Put the target (housing value -- MEDV) in another DataFrame
 target = dataset[['price']]
@@ -54,6 +62,8 @@ X_train = X
 y_test = y.values
 X_test = X
 
+params = {'n_estimators': 700, 'max_depth': 20, 'min_samples_split': 5,
+          'learning_rate': 0.01, 'loss': 'ls'}
 
 # #############################################################################
 # Fit regression model
@@ -63,8 +73,6 @@ try:
     print('Gradient Boosting model loaded from saved data file')
 except:
     print('Calculating Gradient Boosting')
-    params = {'n_estimators': 700, 'max_depth': 20, 'min_samples_split': 5,
-              'learning_rate': 0.01, 'loss': 'ls'}
     model = ensemble.GradientBoostingRegressor(**params)
     
     model.fit(X_train, y_train)
@@ -87,6 +95,42 @@ print('Root Mean Squared Error:', rmse)
 perf = 1 - (rmse/mean)
 perf = perf * 100
 print('Performance ', perf, '%')
+
+# #############################################################################
+# Plot training deviance
+
+# compute test set deviance
+test_score = np.zeros((params['n_estimators'],), dtype=np.float64)
+
+for i, y_pred in enumerate(model.staged_predict(X_test)):
+    test_score[i] = model.loss_(y_test, y_pred)
+
+plt.figure(figsize=(12, 6))
+plt.subplot(1, 2, 1)
+plt.title('Deviance')
+plt.plot(np.arange(params['n_estimators']) + 1, model.train_score_, 'b-', label='Training Set Deviance')
+plt.plot(np.arange(params['n_estimators']) + 1, test_score, 'r-', label='Test Set Deviance')
+plt.legend(loc='upper right')
+plt.xlabel('Boosting Iterations')
+plt.ylabel('Deviance')
+plt.savefig(path+chartfilename2)
+plt.cla()
+plt.clf()
+
+# #############################################################################
+# Plot feature importance
+feature_importance = model.feature_importances_
+Z = [x for _,x in sorted(zip(feature_importance,names))]
+# make importances relative to max importance
+feature_importance = 100.0 * (feature_importance / feature_importance.max())
+sorted_idx = np.argsort(feature_importance)
+pos = np.arange(sorted_idx.shape[0]) + .5
+plt.subplot(1, 2, 2)
+plt.barh(pos, feature_importance[sorted_idx], align='center')
+plt.yticks(pos, Z)
+plt.xlabel('Relative Importance')
+plt.title('Variable Importance')
+plt.savefig(path+chartfilename3)
 
 # #############################################################################
 # Plot
