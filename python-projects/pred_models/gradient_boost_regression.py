@@ -44,13 +44,12 @@ chartfilename3 = 'grad_boost_model_importance_chart_'+dtstamp+'.png'
 save = False
 
 # Load data
-dataset = dao.getDataSetModel(1000)
+dataset = dao.getDataSetModel()
 dataset = pd.DataFrame.from_dict(dataset)
 print('Dataset Acquired: (',len(dataset),')')
 
 # define the data/predictors as the pre-set feature names
-names = ['bedrooms', 'bath', 'size_sqft', 'professionally_managed', 'no_pet_allowed', 'suit_laundry', 'park_stall', 'available_now', 'furnished', 'amenities', 'brand_new','loc_vancouver', 'loc_burnaby', 'loc_richmond', 'loc_surrey', 'loc_newwest', 'loc_abbotsford', 'no_basement']
-df = dataset[names]
+df = dataset[dao.getDataSetModelNames()]
 
 # Put the target (housing value -- MEDV) in another DataFrame
 target = dataset[['price']]
@@ -120,7 +119,7 @@ plt.clf()
 # #############################################################################
 # Plot feature importance
 feature_importance = model.feature_importances_
-Z = [x for _,x in sorted(zip(feature_importance,names))]
+Z = [x for _,x in sorted(zip(feature_importance,dao.getDataSetModelNames()))]
 # make importances relative to max importance
 feature_importance = 100.0 * (feature_importance / feature_importance.max())
 sorted_idx = np.argsort(feature_importance)

@@ -46,8 +46,7 @@ dataset = pd.DataFrame.from_dict(dataset)
 print('Dataset Acquired: (',len(dataset),')')
 
 # define the data/predictors as the pre-set feature names
-names = ['bedrooms', 'bath', 'size_sqft', 'professionally_managed', 'no_pet_allowed', 'suit_laundry', 'park_stall', 'available_now', 'furnished', 'amenities', 'brand_new','loc_vancouver', 'loc_burnaby', 'loc_richmond', 'loc_surrey', 'loc_newwest', 'loc_abbotsford', 'loc_other','no_basement']  
-df = dataset[names]
+df = dataset[dao.getDataSetModelNames()]
 
 # Put the target (housing value -- MEDV) in another DataFrame
 target = dataset[['price']]
@@ -70,7 +69,7 @@ except:
     'obj':'reg:linear',
     'n_estimators':1000,
     'eta':0.3}
-    dmatrix = xg.DMatrix(X, target.values, feature_names=names)
+    dmatrix = xg.DMatrix(X, target.values, feature_names=dao.getDataSetModelNames())
     model = xg.train(params, dmatrix)
     pickle.dump(model, open(path+filename, 'wb'))
     print('Regression Model DMatrix exported to: ', path+filename)
