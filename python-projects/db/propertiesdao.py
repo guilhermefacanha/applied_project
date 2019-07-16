@@ -83,7 +83,9 @@ class PropertiesDao(object):
 
     
     def getLastModel(self, model):
-        return self.modelCollection.find({'model':model}).limit(1).sort({'date':-1})
+        query = {'model':model};
+        cursor = self.modelCollection.find(query).sort('date',-1).limit(1)
+        return cursor[0] if cursor.count() > 0 else None
     
     
 

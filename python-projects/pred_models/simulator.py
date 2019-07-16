@@ -14,10 +14,13 @@ class Simulator:
         self.grad_xgb = self.dao.getLastModel('XGBRegressor');
         self.grad_boost = self.dao.getLastModel('GradientBoostingRegressor');
         self.reg_model = self.dao.getLastModel('OLS Regression');
+        self.dnatrix_model = self.dao.getLastModel('DMatrix Regression');
+        self.xgb_linear_model = self.dao.getLastModel('XGB Linear Regression');
         
         self.filename_reg = 'data/'+self.reg_model
         self.filename_grad = 'data/'+self.grad_boost
         self.filename_grad_2 = 'data/'+self.grad_xgb
+        
         self.model_reg = pickle.load(open(self.filename_reg, 'rb'))
         print('Regression model_reg loaded from saved data file')
     

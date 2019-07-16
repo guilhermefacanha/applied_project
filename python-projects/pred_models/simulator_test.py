@@ -1,10 +1,12 @@
 import pickle
 import pandas as pd
+from pred_models.simulator import Simulator
 
 filename_reg = 'data/reg_model.sav'
 filename_grad = 'data/grad_model.sav'
 filename_grad_2 = 'data/grad_2_model.sav'
-#record = PropertyDAO().getDataFrameRecord(6852790585)
+
+simulator = Simulator() 
 
 # intialise data of lists.
 data = {'price':[2900.0],
@@ -24,6 +26,7 @@ data = {'price':[2900.0],
         'loc_surrey':[0.0], 
         'loc_newwest':[0.0], 
         'loc_abbotsford':[0.0], 
+        'loc_other':[0.0], 
         'no_basement':[1.0]
         }
  
