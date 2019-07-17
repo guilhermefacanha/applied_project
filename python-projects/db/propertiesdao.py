@@ -65,13 +65,16 @@ class PropertiesDao(object):
             props.append(x)
         
         return props
+
+    def getModelNames(self):
+        return self.modelCollection.distinct('model');
     
     def getDataSetModelNames(self):
         return ['bedrooms', 'bath', 'size_sqft', 'professionally_managed', 'no_pet_allowed', 'suit_laundry', 'park_stall', 'available_now', 'furnished', 'amenities', 'brand_new','loc_vancouver', 'loc_burnaby', 'loc_richmond', 'loc_surrey', 'loc_newwest', 'loc_abbotsford', 'loc_other','no_basement']
     
     def getDataSetModel(self, limit = 0):
         # bedrooms > 0 and bedrooms < 5 and size_sqft < 5000 and price < 6000 and bath < 5
-        query = {"bedrooms":{"$gt":0},"price":{"$gt":0},"price":{"$lt":8000},"bath":{"$ne":None},"size_sqft":{"$ne":None}}
+        query = {"bedrooms":{"$gt":0},"bedrooms":{"$lt":5},"price":{"$gt":0},"price":{"$lt":6000},"bath":{"$gt":0},"bath":{"$lt":6},"size_sqft":{"$gt":0}}
         if limit > 0:
             return self.propertyCollection.find(query).limit(limit)
         else:
@@ -83,6 +86,7 @@ class PropertiesDao(object):
     
     def saveModel(self, data):
         self.modelCollection.insert(data)
+    
 
     
     def getLastModel(self, model):

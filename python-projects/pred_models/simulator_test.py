@@ -1,18 +1,17 @@
-import pickle
 import pandas as pd
+
+from db.propertiesdao import PropertiesDao
 from pred_models.simulator import Simulator
+import json
 
-filename_reg = 'data/reg_model.sav'
-filename_grad = 'data/grad_model.sav'
-filename_grad_2 = 'data/grad_2_model.sav'
-
-simulator = Simulator() 
+simulator = Simulator()
+dao = PropertiesDao()
 
 # intialise data of lists.
-data = {'price':[2900.0],
-        'bedrooms':[2.0],
-        'bath':[2.0],
-        'size_sqft':[750.0],
+data = {'price':[2400.0],
+        'bedrooms':[3.0],
+        'bath':[3.0],
+        'size_sqft':[1479.0],
         'professionally_managed':[0.0],
         'no_pet_allowed':[1.0],
         'suit_laundry':[1.0],
@@ -24,7 +23,7 @@ data = {'price':[2900.0],
         'loc_vancouver':[1.0], 
         'loc_burnaby':[0.0], 
         'loc_richmond':[0.0], 
-        'loc_surrey':[0.0], 
+        'loc_surrey':[1.0], 
         'loc_newwest':[0.0], 
         'loc_abbotsford':[0.0], 
         'loc_other':[0.0], 
@@ -39,9 +38,14 @@ print(record)
 
 try:
     simulator.simulate(record)
+    result = json.loads(record.to_json(orient='index'))
     
-    print("Result Record: ",record)
+    print('Price: ',result['0']['price'])
+    models = dao.getModelNames();
+    for model in models:
+        if model in record:
+            print(model,': ',result['0'][model])
     
 except:
-    print('Error loading models found at ',filename_reg)
+    print('Error simulating models')
 print('======================================================')

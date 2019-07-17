@@ -1,4 +1,6 @@
 import pickle
+import xgboost as xg
+
 from db.propertiesdao import PropertiesDao
 from _datetime import datetime
 
@@ -40,9 +42,13 @@ class Simulator:
             for model in self.modelsApp:
                 key = model['key']
                 reg = model['model']
-                pred = reg.predict(df)
-                record[key] = pred.tolist();
+                if key == 'DMatrix Regression':
+                    dtest = xg.DMatrix(df, label='')
+                    pred = reg.predict(dtest)
+                else:
+                    pred = reg.predict(df)
             
+                record[key] = pred.tolist();
             return record;
         except Exception as ex:
             print('Error simulating models ',ex)
