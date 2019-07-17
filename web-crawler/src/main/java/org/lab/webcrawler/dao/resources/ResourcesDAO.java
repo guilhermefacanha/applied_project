@@ -6,6 +6,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.lab.webcrawler.entity.PredictionModel;
 import org.lab.webcrawler.entity.RentProperty;
 
 import com.mongodb.MongoClient;
@@ -25,6 +26,7 @@ public class ResourcesDAO {
 	private static MongoCollection<Document> collectionTest;
 	private static MongoCollection<RentProperty> collectionPropertyTest;
 	private static MongoCollection<RentProperty> collectionProperty;
+	private static MongoCollection<PredictionModel> collectionPredictionModel;
 	private static MongoCollection<Document> collectionPropertyDocument;
 	
 
@@ -39,6 +41,7 @@ public class ResourcesDAO {
 			collectionPropertyDocument = database.getCollection("property");
 			collectionProperty = database.getCollection("property", RentProperty.class);
 			collectionPropertyTest = database.getCollection("property_test", RentProperty.class);
+			collectionPredictionModel = database.getCollection("pred_model",PredictionModel.class);
 		} catch (Exception e) {
 			System.out.println("ERROR CONNECTING TO MONGODB " + e.getMessage());
 			e.printStackTrace();
@@ -59,6 +62,10 @@ public class ResourcesDAO {
 	
 	public static MongoCollection<Document> getCollectionPropertyDocument() {
 		return collectionPropertyDocument;
+	}
+	
+	public static MongoCollection<PredictionModel> getCollectionPredictionModel() {
+		return collectionPredictionModel;
 	}
 
 	public static void dispose() {
