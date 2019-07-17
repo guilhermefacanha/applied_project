@@ -11,7 +11,9 @@
                 <h:form id="menuform">
                     <po:menu>
                         <p:menuitem id="om_dashboard" value="DASHBOARD" icon="fas fa-tachometer-alt" outcome="/dashboard" />
+                        <p:menuitem value="RENT SIMULATOR" icon="fas fa-calculator" outcome="model_simulation" />
                         <p:menuitem value="BOXPLOT ANALYSIS" icon="fas fa-chart-line" outcome="boxplots" />
+                        <p:menuitem value="PREDICTION MODELS" icon="fab fa-connectdevelop" outcome="pred_models" />
                         
                         <p:submenu rendered="false" id="om_components" label="COMPONENTS" icon="fa fa-fw fa-bars">
                             <p:menuitem id="om_sample" value="Sample Page" icon="fa fa-fw fa-columns" outcome="/sample" />
@@ -25,7 +27,7 @@
                             <p:menuitem id="om_file" value="File" icon="fa fa-fw fa-arrow-circle-o-up" outcome="/file" />
                             <p:menuitem id="om_misc" value="Misc" icon="fa fa-fw fa-user-secret" outcome="/misc" />
                         </p:submenu>
-                        <p:submenu id="om_default" label="SIMULATOR" icon="fa fa-fw fa-cube">
+                        <p:submenu rendered="false" id="om_default" label="SIMULATOR" icon="fa fa-fw fa-cube">
                             <p:menuitem id="om_empty" value="Empty" icon="fa fa-fw fa-square-o" outcome="/empty" />
                             <p:menuitem id="om_login" value="Login" icon="fa fa-fw fa-sign-in" outcome="/login" />
                             <p:menuitem id="om_db_landing" value="Landing" icon="fa fa-fw fa-certificate" outcome="/landing" />

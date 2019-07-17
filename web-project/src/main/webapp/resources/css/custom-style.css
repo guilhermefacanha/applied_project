@@ -62,3 +62,8 @@
 	color: red;
 	font-size: 30px;
 }
+
+/*TABLES*/
+.ui-datatable-odd{
+	background-color: #b9e6d8;
+}

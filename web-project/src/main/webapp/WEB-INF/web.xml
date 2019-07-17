@@ -149,16 +149,16 @@
 		</init-param>
 		<init-param>
 			<param-name>ExpiresByType text/css</param-name>
-			<param-value>access plus 10 hours</param-value>
+			<param-value>access plus 10 days</param-value>
 		</init-param>
 		<init-param>
 			<param-name>ExpiresByType application/javascript</param-name>
-			<param-value>access plus 10 minutes</param-value>
+			<param-value>access plus 1 day</param-value>
 		</init-param>
 		<!-- Let everything else expire immediately -->
 		<init-param>
 			<param-name>ExpiresDefault</param-name>
-			<param-value>access plus 0 seconds</param-value>
+			<param-value>access plus 10 minutes</param-value>
 		</init-param>
 	</filter>
 
