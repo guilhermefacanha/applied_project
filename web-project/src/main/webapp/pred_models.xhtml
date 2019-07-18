@@ -10,32 +10,73 @@
 				<div class="ui-g-12">
 					<div class="card card-w-title">
 						<h1>Prediction Models Used in Simulation</h1>
-							<p:dataTable value="#{dataModelsBean.predictionModels}" selectionMode="single" reflow="true"
-                                     selection="#{dataModelsBean.selectedModel}" var="model" rowKey="#{model.id}" paginator="true" rows="10">
-								<f:facet name="header">Prediction Models</f:facet>
-								<p:column headerText="Id">
-									<h:outputText value="#{model.id}"/>
+						<p:separator />
+						<h3>Select one model to see details.</h3>
+						<p:dataTable value="#{dataModelsBean.predictionModels}" selectionMode="single" reflow="true" selection="#{dataModelsBean.selectedModel}" var="model" rowKey="#{model.id}" paginator="true"
+							rows="10">
+							<p:ajax event="rowSelect" update="@(.card-details)" listener="#{dataModelsBean.processChange()}" />
+							<f:facet name="header">Prediction Models</f:facet>
+							<p:column headerText="Id">
+								<h:outputText value="#{model.id}" />
+							</p:column>
+							<p:column headerText="Model" filterBy="#{model.model}" filterMatchMode="contains">
+								<h:outputText value="#{model.model}" />
+							</p:column>
+							<p:column headerText="Date">
+								<h:outputText value="#{model.date}">
+									<f:convertDateTime pattern="dd MMM yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Performance" sortable="true" sortBy="#{model.performance}">
+								<h:outputText value="#{model.performance}">
+									<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+								</h:outputText> %
 								</p:column>
-								<p:column headerText="Model" filterBy="#{model.model}" filterMatchMode="contains">
-									<h:outputText value="#{model.model}"/>
-								</p:column>
-								<p:column headerText="Date">
-									<h:outputText value="#{model.date}">
-										<f:convertDateTime pattern="dd MMM yyyy"/>
-									</h:outputText>
-								</p:column>
-								<p:column headerText="Performance" sortable="true" sortBy="#{model.performance}">
-									<h:outputText value="#{model.performance}">
-										<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
-									</h:outputText> %
-								</p:column>
-								<p:column headerText="Mean Error" sortable="true" sortBy="#{model.mean_error}">
-									<h:outputText value="#{model.mean_error}">
-										<f:convertNumber maxFractionDigits="2" minFractionDigits="2"/>
-									</h:outputText>
-								</p:column>
-							</p:dataTable>
+							<p:column headerText="Mean Error" sortable="true" sortBy="#{model.mean_error}">
+								<h:outputText value="#{model.mean_error}">
+									<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+						</p:dataTable>
 					</div>
+					<h:panelGroup id="pnlDetails" styleClass="card-details">
+						<div class="card card-w-title">
+							<h:panelGroup rendered="#{dataModelsBean.showDetails}">
+								<h3>Model Details:</h3>
+								<div class="ui-g ui-fluid">
+									<div class="ui-g-12 ui-lg-6">
+										<h4>Summary Info</h4>
+										<pre>
+											<h:outputText value="Performance: " />
+											<h:outputText value="#{dataModelsBean.selectedModel.performance}">
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+											</h:outputText>
+											<h:outputText value=" %  |  Mean Error: " />
+											<h:outputText value="#{dataModelsBean.selectedModel.mean_error}">
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+											</h:outputText>
+											<br />
+											<h:outputText escape="true" value="#{dataModelsBean.selectedModel.summary}" />
+										</pre>
+									</div>
+									<div class="ui-g-12 ui-lg-6">
+										<h4>Charts</h4>
+										<p:repeat var="chartfile" value="#{dataModelsBean.charts}" varStatus="stats">
+											<div class="#{dataModelsBean.isClear(stats.index)} ui-g-6">
+												<div class="pnl-chart">
+													<div class="title">Chart <h:outputText value="#{stats.index + 1}"/> </div>
+													<IMG alt="chart1" src="#{request.contextPath}/image/#{chartfile}" />
+													<div class="accounting-progress accounting-progress-1">
+														<div class="accounting-progress-value"></div>
+													</div>
+												</div>
+											</div>
+										</p:repeat>
+									</div>
+								</div>
+							</h:panelGroup>
+						</div>
+					</h:panelGroup>
 				</div>
 			</div>
 		</h:form>

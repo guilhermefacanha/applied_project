@@ -16,7 +16,8 @@
 		background-color: transparent;
 		background: url("#{resource['img/data4.png']}") no-repeat;
 	}
-	.layout-wrapper.layout-topbar-bluegrey .layout-topbar .layout-menu-button{
+	.layout-wrapper.layout-topbar-bluegrey .layout-topbar .layout-menu-button
+		{
 		margin-top: 40px;
 		position: absolute;
 		left: -20px;
@@ -63,7 +64,37 @@
 	font-size: 30px;
 }
 
+.clearfix{
+	clear: left;
+}
+
+/*DETAILS*/
+.card-details h4 {
+	background-color: #b5c8d3;
+	border-radius: 5px;
+	padding: 3px;
+	padding-left: 10px;
+	font-weight: bold !important;
+	color: black;
+}
+
+.pnl-chart {
+	font-size: 14px;
+	font-weight: 700;
+	margin-bottom: 6px;
+}
+
+.pnl-chart img{
+	max-width: 100%;
+	max-height: 100%;
+	transition: transform .2s; /* Animation */
+}
+
+.pnl-chart img:hover {
+  transform: scale(2); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+
 /*TABLES*/
-.ui-datatable-odd{
+.ui-datatable-odd {
 	background-color: #b9e6d8;
 }

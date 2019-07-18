@@ -31,10 +31,8 @@ import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
-import org.primefaces.model.UploadedFile;
-
-import core.config.AppConfig;
 
 public class UtilFunctions {
 	public static String[] icons = { "3d-rotation", "ac-unit", "access-alarm", "access-alarms", "access-time",
@@ -191,6 +189,18 @@ public class UtilFunctions {
 		}
 
 		return -1;
+	}
+
+	public static byte[] getImageByteArray(String filePath) {
+		try {
+			File file = new File(filePath);
+			InputStream in = new FileInputStream(file);
+			return IOUtils.toByteArray(in);
+		} catch (IOException e) {
+			System.out.println("The image was not loaded.");
+		}
+
+		return null;
 	}
 
 	public static Date getDateAddMinute(Date date, int add) {
@@ -670,41 +680,6 @@ public class UtilFunctions {
 
 	public static void limparFlash() {
 		FacesContext.getCurrentInstance().getExternalContext().getFlash().clear();
-	}
-
-	public static String salvarArquivoTemp(UploadedFile file) throws IOException {
-		String nomeArquivo = UtilFunctions.removerAcentuacao(file.getFileName());
-		String extensaoArquivo = UtilFunctions.getExtensaoArquivo(nomeArquivo);
-		nomeArquivo = nomeArquivo.replace(extensaoArquivo, "");
-		nomeArquivo = nomeArquivo + UtilFunctions.getStringFromDate(new Date(), "_ddMMyyyyHHmmss") + extensaoArquivo;
-		String tempFilePath = AppConfig.getCaminhoRepositorioTmp() + File.separator + nomeArquivo;
-		File f = new File(tempFilePath);
-		verificarDiretorio(f.getParentFile());
-		UtilFunctions.gravarArquivo(file.getContents(), tempFilePath);
-
-		return nomeArquivo;
-	}
-
-	public static String salvarArquivoTempNomeOriginal(UploadedFile file) throws IOException {
-		String nomeArquivo = UtilFunctions.removerAcentuacao(file.getFileName());
-		String tempFilePath = AppConfig.getCaminhoRepositorioTmp() + File.separator + nomeArquivo;
-		File f = new File(tempFilePath);
-		verificarDiretorio(f.getParentFile());
-		UtilFunctions.gravarArquivo(file.getContents(), tempFilePath);
-
-		return nomeArquivo;
-	}
-
-	public static String formatarNomeShape(String nome) {
-		nome = nome.replace(UtilFunctions.getExtensaoArquivo(nome), "").replaceAll("-", "").replace(",", "")
-				.replace(".", "").replaceAll("\\s+", " ");
-		nome = Normalizer.normalize(nome.replace(UtilFunctions.getExtensaoArquivo(nome), ""), Normalizer.Form.NFD)
-				.replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replaceAll(" ", "_");
-		nome = "s_" + nome;
-		if (nome.length() > 50)
-			nome = nome.substring(0, 50);
-
-		return nome.toLowerCase();
 	}
 
 	public static boolean isEmailValido(String email) {
