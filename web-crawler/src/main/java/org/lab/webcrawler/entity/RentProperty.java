@@ -8,6 +8,7 @@ import java.util.Date;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,23 +52,41 @@ public class RentProperty implements Serializable {
 	private double loc_abbotsford;
 	private double loc_other;
 	private double no_basement = -1;
+
+	@SerializedName("GradientBoostingRegressor")
 	private double gradient_boost;
-	private double gradient_xgb;
-	private double regression;
+	@SerializedName("XGBRegressor")
+	private double xgbRegressor;
+	@SerializedName("OLS Regression")
+	private double linearRegression;
+	@SerializedName("DMatrix Regression")
+	private double dmatrixRegression;
+	@SerializedName("XGB Linear Regression")
+	private double xgbLinearRegression;
 	
 	@BsonIgnore
-	public String getRegressionStr() {
-		return NumberFormat.getCurrencyInstance().format(regression);
+	public String getLinearRegressionStr() {
+		return NumberFormat.getCurrencyInstance().format(linearRegression);
 	}
 	
 	@BsonIgnore
-	public String getGradientXgbStr() {
-		return NumberFormat.getCurrencyInstance().format(gradient_xgb);
+	public String getXgbRegressorStr() {
+		return NumberFormat.getCurrencyInstance().format(xgbRegressor);
 	}
 	
 	@BsonIgnore
 	public String getGradientBoostStr() {
 		return NumberFormat.getCurrencyInstance().format(gradient_boost);
+	}
+
+	@BsonIgnore
+	public String getDmatrixStr() {
+		return NumberFormat.getCurrencyInstance().format(dmatrixRegression);
+	}
+	
+	@BsonIgnore
+	public String getXgbLinearStr() {
+		return NumberFormat.getCurrencyInstance().format(xgbLinearRegression);
 	}
 	
 	public void resetProperties() {
@@ -77,6 +96,7 @@ public class RentProperty implements Serializable {
 		loc_richmond = 0;
 		loc_surrey = 0;
 		loc_abbotsford = 0;
+		loc_other = 0;
 		
 		professionally_managed = 0;
 		no_pet_allowed = 0;
@@ -86,6 +106,7 @@ public class RentProperty implements Serializable {
 		amenities = 0;
 		brand_new = 0;
 		no_basement = 1;
+		furnished = 0;
 	}
 	
 	@BsonIgnore
@@ -93,9 +114,11 @@ public class RentProperty implements Serializable {
 		return new Gson().toJson(this);
 	}
 	public void resetPrices() {
-		this.regression = 0;
+		this.linearRegression = 0;
 		this.gradient_boost = 0;
-		this.gradient_xgb = 0;
+		this.xgbRegressor = 0;
+		this.xgbLinearRegression= 0;
+		this.dmatrixRegression = 0;
 	}
 
 	public RentProperty(long id, String link,String description, Date creation) {

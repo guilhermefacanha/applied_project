@@ -34,6 +34,7 @@
 	}
 }
 
+/*OVERVIEW BOX*/
 .overview-box {
 	max-height: 106px;
 }
@@ -51,6 +52,22 @@
 	padding-right: 28px;
 }
 
+.overview-box-model {
+	min-width: 400px;
+	background-color: #d9e2df !important;
+	max-height: 85px !important;
+}
+
+.overview-box-model i {
+	top: 35% !important;
+	padding-right: 32px !important;
+}
+
+.box-model {
+	font-size: 18px !important;
+	font-weight: bold !important;
+}
+
 .fa-calendar {
 	color: #676b58;
 }
@@ -59,13 +76,21 @@
 	font-size: 18px;
 }
 
+.layout-footer .ui-g{
+	display: inherit;
+}
+
 .fa-loader {
 	color: red;
 	font-size: 30px;
 }
 
-.clearfix{
+.clearfix {
 	clear: left;
+}
+
+.ui-outputlabel {
+	margin-left: 5px;
 }
 
 /*DETAILS*/
@@ -84,14 +109,15 @@
 	margin-bottom: 6px;
 }
 
-.pnl-chart img{
+.pnl-chart img {
 	max-width: 100%;
 	max-height: 100%;
 	transition: transform .2s; /* Animation */
 }
 
 .pnl-chart img:hover {
-  transform: scale(2); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+	transform: scale(2);
+	/* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
 }
 
 /*TABLES*/

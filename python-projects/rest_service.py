@@ -1,21 +1,22 @@
 import json
 
+from bson import json_util
 from flask import Flask
 from flask.globals import request
+from flask.sessions import session_json_serializer
 from flask_cors.extension import CORS
 
+from db.DateTimeEncoder import DateTimeEncoder
 from db.propertiesdao import PropertiesDao
 import pandas as pd
-from simulator import Simulator
-from bson import json_util
-from flask.sessions import session_json_serializer
-from db.DateTimeEncoder import DateTimeEncoder
+from pred_models.simulator import Simulator
 
 
 #pip install flask_cors
 #start the rest api application
 app = Flask(__name__)
 CORS(app) #apply cors for remote connection accept
+simulator = Simulator()
 
 @app.route('/')
 def index():
@@ -27,9 +28,37 @@ def index():
     
     return json.dumps(data);
 
+@app.route('/simulate_test', methods=['GET'])
+def simulatetest():
+    # intialise data of lists.
+    data = {'price':[2400.0],
+            'bedrooms':[3.0],
+            'bath':[3.0],
+            'size_sqft':[1479.0],
+            'professionally_managed':[0.0],
+            'no_pet_allowed':[1.0],
+            'suit_laundry':[1.0],
+            'park_stall':[1.0], 
+            'available_now':[0.0], 
+            'furnished':[1.0], 
+            'amenities':[0.0], 
+            'brand_new':[0.0],
+            'loc_vancouver':[1.0], 
+            'loc_burnaby':[0.0], 
+            'loc_richmond':[0.0], 
+            'loc_surrey':[1.0], 
+            'loc_newwest':[0.0], 
+            'loc_abbotsford':[0.0], 
+            'loc_other':[0.0], 
+            'no_basement':[1.0]
+            }
+    
+    record = pd.DataFrame(data)
+    record = simulator.simulate(record)
+    return record.to_json(orient='index')
+    
 @app.route('/simulate', methods=['POST'])
 def simulate():
-    simulator = Simulator()
     req_data = request.get_json()
     data = {'price':[req_data['price']],
         'bedrooms':[req_data['bedrooms']],
@@ -48,6 +77,8 @@ def simulate():
         'loc_surrey':[req_data['loc_surrey']], 
         'loc_newwest':[req_data['loc_newwest']], 
         'loc_abbotsford':[req_data['loc_abbotsford']], 
+        'loc_other':[req_data['loc_other']], 
+        'furnished':[req_data['furnished']], 
         'no_basement':[req_data['no_basement']]
         }
     

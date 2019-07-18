@@ -61,8 +61,11 @@ public class SimulatorBean implements Serializable {
 	@Getter
 	@Setter
 	private boolean basement;
+	@Getter
+	@Setter
+	private boolean furnished;
 
-	private String restPath = "http://158.69.217.148:5000/";
+	private String restPath = "http://localhost:5000/";
 
 	public void getSimulation() {
 		testGetMethod();
@@ -86,6 +89,11 @@ public class SimulatorBean implements Serializable {
 			this.property.setBrand_new(1);
 		if (basement)
 			this.property.setNo_basement(0);
+		else
+			this.property.setNo_basement(1);
+		
+		if (furnished)
+			this.property.setFurnished(1);;
 
 		switch (city) {
 		case "vancouver":
@@ -107,6 +115,7 @@ public class SimulatorBean implements Serializable {
 			this.property.setLoc_abbotsford(1);
 			break;
 		default:
+			this.property.setLoc_other(1);
 			break;
 		}
 
