@@ -27,5 +27,9 @@ public class AppConfig
 			return "/python/data/"; 
 		}
 	}
+	
+	public static String getServiceURL() {
+		return "https://training.gfsolucoesti.com.br/service/";
+	}
 
 }

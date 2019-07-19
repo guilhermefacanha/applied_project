@@ -1,6 +1,7 @@
 package data.bean;
 
 import java.io.Serializable;
+import java.util.Collections;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -10,14 +11,19 @@ import org.lab.webcrawler.entity.RentProperty;
 
 import com.google.gson.Gson;
 
+import core.config.AppConfig;
+import core.util.OkHttpTrustAll;
 import core.util.UtilFunctions;
 import lombok.Getter;
 import lombok.Setter;
+import okhttp3.CipherSuite;
+import okhttp3.ConnectionSpec;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.TlsVersion;
 
 @ViewScoped
 @Named
@@ -64,8 +70,6 @@ public class SimulatorBean implements Serializable {
 	@Getter
 	@Setter
 	private boolean furnished;
-
-	private String restPath = "http://localhost:5000/";
 
 	public void getSimulation() {
 		testGetMethod();
@@ -126,10 +130,23 @@ public class SimulatorBean implements Serializable {
 	private void getSimulatedModels() {
 		try {
 			this.property.resetPrices();
-			OkHttpClient client = new OkHttpClient();
+			ConnectionSpec spec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+				    .tlsVersions(TlsVersion.TLS_1_2)
+				    .cipherSuites(
+				          CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+				          CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+				          CipherSuite.TLS_DHE_RSA_WITH_AES_128_GCM_SHA256)
+				    .build();
+
+			OkHttpClient pre = new OkHttpClient.Builder()
+				    .connectionSpecs(Collections.singletonList(spec))
+				    .build();
+			
+			OkHttpClient client = OkHttpTrustAll.trustAllSslClient(pre);
+			
 			String json = property.getJson();
 			RequestBody body = RequestBody.create(JSON, json);
-			Request request = new Request.Builder().url(restPath + "simulate").post(body).build();
+			Request request = new Request.Builder().url(AppConfig.getServiceURL() + "simulate").post(body).build();
 			Response response = client.newCall(request).execute();
 			String responseStr = response.body().string();
 			output = new JSONObject(responseStr).toString(3).replace("\n", "<br/>");
@@ -149,7 +166,7 @@ public class SimulatorBean implements Serializable {
 	private void testGetMethod() {
 		try {
 			OkHttpClient client = new OkHttpClient();
-			Request request = new Request.Builder().url(restPath + "test").build();
+			Request request = new Request.Builder().url(AppConfig.getServiceURL() + "test").build();
 			Response response = client.newCall(request).execute();
 			output = response.body().string();
 			output = new JSONObject(output).toString(2).replace("\n", "<br/>");
