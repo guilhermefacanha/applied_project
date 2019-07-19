@@ -74,7 +74,7 @@ class PropertiesDao(object):
     
     def getDataSetModel(self, limit = 0):
         # bedrooms > 0 and bedrooms < 5 and size_sqft < 5000 and price < 6000 and bath < 5
-        query = {"bedrooms":{"$gt":0},"bedrooms":{"$lt":5},"price":{"$gt":0},"price":{"$lt":6000},"bath":{"$gt":0},"bath":{"$lt":6},"size_sqft":{"$gt":0}}
+        query = {"bedrooms":{"$gt":0,"$lt":6},"price":{"$gt":900,"$lt":6000},"bath":{"$gt":0,"$lt":6},"size_sqft":{"$gt":0}}
         if limit > 0:
             return self.propertyCollection.find(query).limit(limit)
         else:

@@ -66,7 +66,7 @@ except:
     'learning_rate':0.3,
     'subsample':0.5,
     'colsample_bytree':0.6,
-    'obj':'reg:linear',
+    'obj':'reg:squarederror',
     'n_estimators':1000,
     'eta':0.3}
     dmatrix = xg.DMatrix(X, target.values, feature_names=dao.getDataSetModelNames())

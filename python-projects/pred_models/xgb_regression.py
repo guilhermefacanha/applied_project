@@ -70,8 +70,10 @@ gbm_param_grid = {
      'max_depth': [10, 15, 20, 25]
 }
 
+xgbr_params = {'objective':'reg:squarederror'}
+
 #Instantiate the regressor
-gbm = xgb.XGBRegressor()
+gbm = xgb.XGBRegressor(**xgbr_params)
 
 #Perform grid search
 try:

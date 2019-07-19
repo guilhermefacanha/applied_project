@@ -1,6 +1,5 @@
 import json
 
-from bson import json_util
 from flask import Flask
 from flask.globals import request
 from flask.sessions import session_json_serializer
@@ -12,6 +11,7 @@ import pandas as pd
 from pred_models.simulator import Simulator
 
 
+#pip install flask
 #pip install flask_cors
 #start the rest api application
 app = Flask(__name__)
@@ -25,6 +25,7 @@ def index():
     data['get_property'] = {"self": {"href": "/prop/{propid}"}}
     data['testpost'] = {"self": {"href": "/testpost"}}
     data['simulate'] = {"self": {"href": "/simulate"}}
+    data['simulate_test'] = {"self": {"href": "/simulate_test"}}
     
     return json.dumps(data);
 
