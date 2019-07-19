@@ -10,6 +10,7 @@ from db.propertiesdao import PropertiesDao
 import pandas as pd
 from pred_models.simulator import Simulator
 
+#try to install swagger python flask
 
 #pip install flask
 #pip install flask_cors
