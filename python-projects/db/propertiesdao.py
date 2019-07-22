@@ -9,6 +9,10 @@ Created on Jun 6, 2019
 
 import pymongo
 import json
+
+import pandas as pd
+import numpy as np
+
 from bson.objectid import ObjectId
 from db.DateTimeEncoder import DateTimeEncoder
 
@@ -70,7 +74,7 @@ class PropertiesDao(object):
         return self.modelCollection.distinct('model');
     
     def getDataSetModelNames(self):
-        return ['bedrooms', 'bath', 'size_sqft', 'professionally_managed', 'no_pet_allowed', 'suit_laundry', 'park_stall', 'available_now', 'furnished', 'amenities', 'brand_new','loc_vancouver', 'loc_burnaby', 'loc_richmond', 'loc_surrey', 'loc_newwest', 'loc_abbotsford', 'loc_other','no_basement']
+        return ['bedrooms', 'bath', 'size_sqft_lg', 'professionally_managed', 'no_pet_allowed', 'suit_laundry', 'park_stall', 'available_now', 'furnished', 'amenities', 'brand_new','loc_vancouver', 'loc_burnaby', 'loc_richmond', 'loc_surrey', 'loc_newwest', 'loc_abbotsford', 'loc_other','no_basement']
     
     def getDataSetModel(self, limit = 0):
         # bedrooms > 0 and bedrooms < 5 and size_sqft < 5000 and price < 6000 and bath < 5
@@ -78,7 +82,13 @@ class PropertiesDao(object):
         if limit > 0:
             return self.propertyCollection.find(query).limit(limit)
         else:
-            return self.propertyCollection.find(query); 
+            return self.propertyCollection.find(query);
+    
+    def getDataSetModelPd(self, limit = 0):
+        dataset = self.getDataSetModel(limit=limit)
+        dataset = pd.DataFrame.from_dict(dataset)
+        dataset['size_sqft_lg'] = np.log10(dataset['size_sqft'])
+        return dataset
     
     def updateProperty(self, _id, newValues):
         myquery = { "_id": _id }

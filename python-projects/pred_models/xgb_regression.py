@@ -44,8 +44,7 @@ chartfilename2 = 'grad_xgb_model_importance'+dtstamp+'.png'
 save = False
 
 # Load data
-dataset = dao.getDataSetModel()
-dataset = pd.DataFrame.from_dict(dataset)
+dataset = dao.getDataSetModelPd()
 print('Dataset Acquired: (',len(dataset),')')
 
 
@@ -82,7 +81,7 @@ try:
 except:
     print('Calculating Gradient Boosting XGBRegressor')
     
-    grid_model = GridSearchCV(estimator = gbm, param_grid = gbm_param_grid, scoring = 'neg_mean_squared_error', cv = 5, n_jobs= 4, verbose = 1)
+    grid_model = GridSearchCV(estimator = gbm, param_grid = gbm_param_grid, scoring = 'neg_mean_squared_error', cv = 5, n_jobs= 8, verbose = 1)
     grid_model.fit(X, y)
     print("Best parameters found: ",grid_model.best_params_)
     print("Lowest RMSE found: ", np.sqrt(np.abs(grid_model.best_score_)))

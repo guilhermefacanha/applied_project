@@ -1,10 +1,11 @@
 import pandas as pd
+import numpy as np
 
 from db.propertiesdao import PropertiesDao
 from pred_models.simulator import Simulator
 import json
 
-simulator = Simulator()
+#simulator = Simulator()
 dao = PropertiesDao()
 
 # intialise data of lists.
@@ -32,10 +33,12 @@ data = {'price':[2400.0],
  
 # Create DataFrame
 record = pd.DataFrame(data)
+record['size_sqft_lg'] = np.log10(dataset['size_sqft'])
  
 # Print the output.
-print(record)
+print(record.to_json(orient='index'))
 
+"""
 try:
     simulator.simulate(record)
     result = json.loads(record.to_json(orient='index'))
@@ -48,4 +51,6 @@ try:
     
 except:
     print('Error simulating models')
+"""
+    
 print('======================================================')

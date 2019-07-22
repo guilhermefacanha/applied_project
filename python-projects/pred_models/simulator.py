@@ -1,5 +1,6 @@
 import pickle
 import xgboost as xg
+import numpy as np
 
 from db.propertiesdao import PropertiesDao
 from _datetime import datetime
@@ -37,6 +38,7 @@ class Simulator:
         
     def simulate(self, record):
         try:
+            record['size_sqft_lg'] = np.log10(record['size_sqft'])
             df = record[self.dao.getDataSetModelNames()]
             
             for model in self.modelsApp:

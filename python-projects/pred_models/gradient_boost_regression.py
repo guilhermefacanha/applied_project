@@ -44,8 +44,7 @@ chartfilename3 = 'grad_boost_model_importance_chart_'+dtstamp+'.png'
 save = False
 
 # Load data
-dataset = dao.getDataSetModel()
-dataset = pd.DataFrame.from_dict(dataset)
+dataset = dao.getDataSetModelPd()
 print('Dataset Acquired: (',len(dataset),')')
 
 # define the data/predictors as the pre-set feature names
