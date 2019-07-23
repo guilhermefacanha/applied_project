@@ -76,16 +76,20 @@ class PropertiesDao(object):
     def getDataSetModelNames(self):
         return ['bedrooms', 'bath', 'size_sqft_lg', 'professionally_managed', 'no_pet_allowed', 'suit_laundry', 'park_stall', 'available_now', 'furnished', 'amenities', 'brand_new','loc_vancouver', 'loc_burnaby', 'loc_richmond', 'loc_surrey', 'loc_newwest', 'loc_abbotsford', 'loc_other','no_basement']
     
-    def getDataSetModel(self, limit = 0):
+    def getDataSetModel(self, limit = 0, bdrm = 0):
         # bedrooms > 0 and bedrooms < 5 and size_sqft < 5000 and price < 6000 and bath < 5
-        query = {"bedrooms":{"$gt":0,"$lt":6},"price":{"$gt":900,"$lt":6000},"bath":{"$gt":0,"$lt":6},"size_sqft":{"$gt":0}}
+        if bdrm > 0:
+            query = {"bedrooms":bdrm,"price":{"$gt":900,"$lt":6000},"bath":{"$gt":0,"$lt":6},"size_sqft":{"$gt":0}}
+        else:
+            query = {"bedrooms":{"$gt":0,"$lt":6},"price":{"$gt":900,"$lt":6000},"bath":{"$gt":0,"$lt":6},"size_sqft":{"$gt":0}}
+            
         if limit > 0:
             return self.propertyCollection.find(query).limit(limit)
         else:
             return self.propertyCollection.find(query);
     
-    def getDataSetModelPd(self, limit = 0):
-        dataset = self.getDataSetModel(limit=limit)
+    def getDataSetModelPd(self, limit = 0, bdrm = 0):
+        dataset = self.getDataSetModel(limit=limit, bdrm=bdrm)
         dataset = pd.DataFrame.from_dict(dataset)
         dataset['size_sqft_lg'] = np.log10(dataset['size_sqft'])
         return dataset

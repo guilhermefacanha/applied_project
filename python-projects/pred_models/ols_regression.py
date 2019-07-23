@@ -1,4 +1,4 @@
-#run with python -m pred_models.ols_regression
+# run with python -m pred_models.ols_regression
 
 import pickle
 import statistics
@@ -12,6 +12,7 @@ from sklearn import metrics
 from bson.objectid import ObjectId
 from db.propertiesdao import PropertiesDao
 
+
 def saveModelData(performance, mean_error, summary):
     data = {};
     data['_id'] = str(ObjectId())
@@ -24,6 +25,7 @@ def saveModelData(performance, mean_error, summary):
     data['summary'] = summary
     dao.saveModel(data)
 
+
 # #############################################################################
 dao = PropertiesDao()
 
@@ -33,15 +35,29 @@ dtstamp = x.strftime("%Y%m%d")
 
 # Files variables
 path = 'data/'
-filename = 'reg_ols_model_'+dtstamp+'.sav'
-chartfilename = 'reg_ols_model_pred_chart_'+dtstamp+'.png'
 
 save = False
 
+print('Enter number of bedrooms to analyse and generate a model')
+bdrmInput = 0
+
+try:
+    bdrmInput = int(input())
+    if bdrmInput > 0:
+        print('Running analysis for properties with '+str(bdrmInput)+' bedrooms')
+    else:
+        print('Running analysis for ALL properties')
+        
+except:
+    bdrmInput = 0
+    print('Running analysis for ALL properties')
+
+filename = 'reg_ols_model_' + dtstamp + '.sav' if bdrmInput == 0 else 'reg_ols_model_' + str(bdrmInput) + '_bdrm' + dtstamp + '.sav'
+chartfilename = 'reg_ols_model_pred_chart_' + dtstamp + '.png' if bdrmInput == 0 else 'reg_ols_model_pred_chart_' + str(bdrmInput) + '_bdrm' + dtstamp + '.png'
 
 # Load data
-dataset = dao.getDataSetModelPd()
-print('Dataset Acquired: (',len(dataset),')')
+dataset = dao.getDataSetModelPd(bdrm=bdrmInput)
+print('Dataset Acquired: (', len(dataset), ')')
 
 # define the data/predictors as the pre-set feature names  
 df = dataset[dao.getDataSetModelNames()]
@@ -55,21 +71,21 @@ y = target["price"]
 # Note the difference in argument order
 print('======================================================')
 try:
-    model = pickle.load(open(path+filename, 'rb'))
+    model = pickle.load(open(path + filename, 'rb'))
     print('Regression model loaded from saved data file')
 except:
     print('Calculating regression model')
     model = sm.OLS(y, X).fit()
-    pickle.dump(model, open(path+filename, 'wb'))
-    print('Regression Model exported to: ', path+filename)
+    pickle.dump(model, open(path + filename, 'wb'))
+    print('Regression Model exported to: ', path + filename)
     save = True
 print('======================================================')
 
 predictions = model.predict(X)  # make the predictions by the model
 
-#save predictions to csv uncomment if needed
-#dataset['prediction'] = predictions;
-#dataset.to_csv('../data/result.csv')
+# save predictions to csv uncomment if needed
+# dataset['prediction'] = predictions;
+# dataset.to_csv('../data/result.csv')
 
 # Print out the statistics
 summary = model.summary()
@@ -89,20 +105,19 @@ print('Performance ', perf, '%')
 test = pd.DataFrame({"prediction": predictions, "observed": y})
 lowess = sm.nonparametric.lowess
 z = lowess(predictions.values.flatten(), y)
-test.plot(figsize = [14,8],
-          x ="prediction", y = "observed", kind = "scatter", color = 'darkred')
-plt.title("Regression OLS Model: Prediction Vs Test Data", fontsize = 18, color = "darkgreen")
-plt.xlabel("Predicted Power Output", fontsize = 18) 
-plt.ylabel("Observed Power Output", fontsize = 18)
-plt.plot(z[:,0], z[:,1], color = "blue", lw= 3)
+test.plot(figsize=[14, 8],
+          x="prediction", y="observed", kind="scatter", color='darkred')
+plt.title("Regression OLS Model: Prediction Vs Test Data", fontsize=18, color="darkgreen")
+plt.xlabel("Predicted Power Output", fontsize=18) 
+plt.ylabel("Observed Power Output", fontsize=18)
+plt.plot(z[:, 0], z[:, 1], color="blue", lw=3)
 
 if(save == True):
-    plt.savefig(path+chartfilename)
-    saveModelData(perf,mean_error,str(summary))
+    plt.savefig(path + chartfilename)
+    saveModelData(perf, mean_error, str(summary))
 
 print()
 print('Model Calculation Finished')
 print()
 print('======================================================')
-
 
