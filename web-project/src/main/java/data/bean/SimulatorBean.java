@@ -7,6 +7,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.json.JSONObject;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.lab.webcrawler.dao.RentPropertyDAO;
 import org.lab.webcrawler.entity.RentProperty;
 import org.lab.webcrawler.service.WebCrawler;
@@ -101,12 +103,38 @@ public class SimulatorBean implements Serializable {
 				}
 			}
 			
+			property = null; //TODO: Remove
 			if(property==null || property.getId()<=0) {
+				property = new RentProperty();
 				WebCrawler crawler = new WebCrawler();
 				crawler.load(url);
 				String fullDescription = crawler.getFullDescription();
 				if(!UtilFunctions.isNullEmpty(fullDescription))
 					property.setFullDescription(fullDescription);
+				
+				Elements elements = crawler.getElements("span[class=shared-line-bubble]");
+				for (Element element : elements) {
+					String text = element.text();
+					if(text.toUpperCase().contains("/")) {
+						String[] split = text.split("/");
+						for (String string : split) {
+							if(string.toUpperCase().contains("R")) {
+								String bdrm = string.replaceAll("[^\\d.]", "");
+								this.property.setBedrooms(Double.parseDouble(bdrm));
+							}else {
+								String bath = string.replaceAll("[^\\d.]", "");
+								this.property.setBath(Double.parseDouble(bath));
+								
+							}
+						}
+					}
+					else if(text.toUpperCase().contains("FT")) {
+						text = text.toUpperCase();
+						String size = text.replaceAll("FT2", "").replaceAll("[^\\d.]", "");
+						this.property.setSize_sqft(Double.parseDouble(size));
+						
+					}
+				}
 			}
 			else {
 				loadCharacteristicsFromProperty();
