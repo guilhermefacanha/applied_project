@@ -124,3 +124,7 @@
 .ui-datatable-odd {
 	background-color: #b9e6d8;
 }
+
+.ui-fluid .ui-inputgroup .ui-button{
+	width: 15%;
+}

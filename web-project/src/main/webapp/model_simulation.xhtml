@@ -7,7 +7,11 @@
 				<div class="ui-g ui-fluid">
 					<div class="ui-g-12 ui-lg-6">
 						<h1>Create Rent Simulation</h1>
-						<p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid">
+                            <div class="ui-inputgroup" style="padding: 0px 15px 5px 15px;">
+                                <p:commandButton value="Load Data" actionListener="#{simulatorBean.loadData()}" update="pnlprop"/> 
+                                <p:inputText placeholder="Enter advertisement Id or URL from Craigslist" value="#{simulatorBean.url}"/>        
+                            </div>
+						<p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid" id="pnlprop">
 							<h:panelGroup>
 								<fieldset style="max-width: 750px;">
 									<LEGEND>

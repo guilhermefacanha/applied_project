@@ -3,6 +3,7 @@ package org.lab.webcrawler.dao;
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Projections.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -13,7 +14,9 @@ import org.lab.webcrawler.entity.RentProperty;
 
 import com.mongodb.BasicDBObject;
 
-public class RentPropertyDAO {
+public class RentPropertyDAO implements Serializable {
+	private static final long serialVersionUID = 8200291980072454185L;
+
 	public void saveAll(List<RentProperty> list) {
 		StringBuffer str = new StringBuffer();
 		List<Long> ids = getRegisteredIds();
@@ -87,6 +90,15 @@ public class RentPropertyDAO {
 		ResourcesDAO.getCollectionProperty().find().projection(include("id")).forEach(consumer);
 		
 		return list;
+	}
+	
+	public RentProperty getPropertyById(long id) {
+		BasicDBObject query = new BasicDBObject("_id", id);
+		return ResourcesDAO.getCollectionProperty().find(query).limit(1).first();
+	}
+	public RentProperty getPropertyByLink(String link) {
+		BasicDBObject query = new BasicDBObject("link", link);
+		return ResourcesDAO.getCollectionProperty().find(query).limit(1).first();
 	}
 
 	private boolean existsProperty(long id) {

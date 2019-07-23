@@ -7,7 +7,9 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.json.JSONObject;
+import org.lab.webcrawler.dao.RentPropertyDAO;
 import org.lab.webcrawler.entity.RentProperty;
+import org.lab.webcrawler.service.WebCrawler;
 
 import com.google.gson.Gson;
 
@@ -31,6 +33,8 @@ public class SimulatorBean implements Serializable {
 
 	private static final long serialVersionUID = -2604175097122520038L;
 	public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+	
+	RentPropertyDAO dao = new RentPropertyDAO();
 
 	@Getter
 	@Setter
@@ -39,6 +43,10 @@ public class SimulatorBean implements Serializable {
 	@Getter
 	@Setter
 	private String city;
+
+	@Getter
+	@Setter
+	private String url;
 
 	@Getter
 	String output;
@@ -74,6 +82,75 @@ public class SimulatorBean implements Serializable {
 	public void getSimulation() {
 		testGetMethod();
 
+	}
+	
+	public void loadData() {
+		try {
+			if(UtilFunctions.isNullEmpty(url))
+				throw new Exception("Enter a URL to load the data from!");
+			
+			try {
+				long pid = Long.parseLong(url);
+				if(pid>0) {
+					property = dao.getPropertyById(pid);
+				}
+			} catch (Exception e) {
+				try {
+					property = dao.getPropertyByLink(url);
+				} catch (Exception e2) {
+				}
+			}
+			
+			if(property==null || property.getId()<=0) {
+				WebCrawler crawler = new WebCrawler();
+				crawler.load(url);
+				String fullDescription = crawler.getFullDescription();
+				if(!UtilFunctions.isNullEmpty(fullDescription))
+					property.setFullDescription(fullDescription);
+			}
+			else {
+				loadCharacteristicsFromProperty();
+			}
+			
+		} catch (Exception e) {
+			UtilFunctions.adicionarMsg(e.getMessage(), true);
+		}
+	}
+
+	private void loadCharacteristicsFromProperty() {
+		if(this.property.getProfessionally_managed()==1)
+			professionally_managed = true;
+		if(this.property.getNo_pet_allowed()==1)
+			no_pet_allowed = true;
+		if(this.property.getSuit_laundry()==1)
+			suit_laundry = true;
+		if(this.property.getPark_stall()==1)
+			park_stall = true;
+		if(this.property.getAvailable_now()==1)
+			available_now = true;
+		if(this.property.getAmenities()==1)
+			amenities = true;
+		if(this.property.getBrand_new()==1)
+			brand_new = true;
+		if(this.property.getNo_basement()==1)
+			basement = false;
+		else
+			basement = true;
+		
+		if(this.property.getLoc_vancouver()==1)
+			city = "vancouver";
+		else if(this.property.getLoc_burnaby()==1)
+			city = "burnaby";
+		else if(this.property.getLoc_richmond()==1)
+			city = "richmond";
+		else if(this.property.getLoc_newwest()==1)
+			city = "newwest";
+		else if(this.property.getLoc_surrey()==1)
+			city = "surrey";
+		else if(this.property.getLoc_abbotsford()==1)
+			city = "abbot";
+		else
+			city = "other";
 	}
 
 	public void simulateRent() {
