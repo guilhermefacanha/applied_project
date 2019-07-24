@@ -103,7 +103,6 @@ public class SimulatorBean implements Serializable {
 				}
 			}
 			
-			property = null; //TODO: Remove
 			if(property==null || property.getId()<=0) {
 				property = new RentProperty();
 				WebCrawler crawler = new WebCrawler();
@@ -112,6 +111,9 @@ public class SimulatorBean implements Serializable {
 				if(!UtilFunctions.isNullEmpty(fullDescription))
 					property.setFullDescription(fullDescription);
 				
+				Elements price = crawler.getElements("span[class=price]");
+				if(price!=null && price.size()>0)
+					this.property.setPrice(Double.parseDouble(price.get(0).text().replace("$", "")));
 				Elements elements = crawler.getElements("span[class=shared-line-bubble]");
 				for (Element element : elements) {
 					String text = element.text();

@@ -7,10 +7,10 @@
 				<div class="ui-g ui-fluid">
 					<div class="ui-g-12 ui-lg-6">
 						<h1>Create Rent Simulation</h1>
-                            <div class="ui-inputgroup" style="padding: 0px 15px 5px 15px;">
-                                <p:commandButton value="Load Data" actionListener="#{simulatorBean.loadData()}" update="pnlprop"/> 
-                                <p:inputText placeholder="Enter advertisement Id or URL from Craigslist" value="#{simulatorBean.url}"/>        
-                            </div>
+						<div class="ui-inputgroup" style="padding: 0px 15px 5px 15px;">
+							<p:commandButton value="Load Data" actionListener="#{simulatorBean.loadData()}" update="pnlprop pnlResult" />
+							<p:inputText placeholder="Enter advertisement Id or URL from Craigslist" value="#{simulatorBean.url}" />
+						</div>
 						<p:panelGrid columns="1" styleClass="form-group ui-panelgrid-blank" layout="grid" id="pnlprop">
 							<h:panelGroup>
 								<fieldset style="max-width: 750px;">
@@ -87,6 +87,21 @@
 							<h2>Results:</h2>
 							<div class="layout-dashboard">
 								<div class="ui-g-6">
+									<h:panelGroup rendered="#{simulatorBean.property.price > 0}">
+										<div class="overview-box overview-box-checkins overview-box-model" style="background-color: #ececec !important;">
+											<p:graphicImage name="images/dashboard/asset-template.png" library="olympia-layout" />
+											<i class="fas fa-dollar-sign fa-2x" style="color: #ececec !important;"></i>
+											<div class="overview-box-content">
+												<div class="overview-box-title">Advertised property price</div>
+												<div class="overview-box-details box-model">
+													<h:outputText value="$" />
+													<h:outputText value="#{simulatorBean.property.price}">
+														<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+													</h:outputText>
+												</div>
+											</div>
+										</div>
+									</h:panelGroup>
 									<div class="overview-box overview-box-checkins overview-box-model" style="background-color: #dee8ed !important;">
 										<p:graphicImage name="images/dashboard/asset-template.png" library="olympia-layout" />
 										<i class="fas fa-dollar-sign fa-2x" style="color: #dee8ed !important;"></i>
