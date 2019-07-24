@@ -13,10 +13,10 @@ from bson.objectid import ObjectId
 from db.propertiesdao import PropertiesDao
 
 
-def saveModelData(performance, mean_error, summary):
+def saveModelData(performance, mean_error, summary, bdrmInput = 0):
     data = {};
     data['_id'] = str(ObjectId())
-    data['model'] = 'OLS Regression'
+    data['model'] = 'OLS Regression' if bdrmInput == 0 else 'OLS Regression '+ str(bdrmInput)
     data['file'] = filename
     data['chart'] = chartfilename
     data['date'] = datetime.datetime.utcnow()
@@ -114,7 +114,7 @@ plt.plot(z[:, 0], z[:, 1], color="blue", lw=3)
 
 if(save == True):
     plt.savefig(path + chartfilename)
-    saveModelData(perf, mean_error, str(summary))
+    saveModelData(perf, mean_error, str(summary), bdrmInput)
 
 print()
 print('Model Calculation Finished')
