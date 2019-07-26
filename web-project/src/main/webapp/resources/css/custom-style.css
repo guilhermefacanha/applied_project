@@ -5,10 +5,16 @@
 	border: none !important;
 }
 
+/*OVERRIDE DEFAULT CLASSES*/
 .layout-wrapper.layout-topbar-bluegrey .layout-topbar {
 	background-color: transparent;
 	background: url("#{resource['img/data3.png']}") no-repeat;
 	background-size: 100% auto;
+}
+
+.layout-dashboard .overview-box .overview-box-content .overview-box-title{
+	font-size: 14px;
+	font-weight: bold;
 }
 
 @media only screen and (max-width: 800px) {

@@ -31,6 +31,9 @@ public class DataAnalysisDAO implements Serializable {
 
 	private static int lbd, ubd, lpr, upr;
 
+	Document queryValueFilter = Document.parse(
+			"{'bedrooms':{'$gt':0,'$lt':6},'price':{'$gt':900,'$lt':6000},'bath':{'$gt':0,'$lt':6},'size_sqft':{'$gt':0}}");
+
 	public void refreshData() {
 		dataPriceAverage = (Double) getAggregate("price", StatsOp.AVG);
 		populateDataSize();
@@ -88,9 +91,10 @@ public class DataAnalysisDAO implements Serializable {
 	// Populate Methods
 	private void populateLocationDistribution() {
 		locationDistribution = new String[3];
-		String labels = "['Vancouver','Burnaby','Richmond','Surrey','New Westminster','Abbotsford']";
-		double[] values = new double[6];
-		double[] averages = new double[6];
+		String labels = "['Vancouver','Burnaby','Richmond','Surrey','New Westminster','Abbotsford','Other']";
+		String[] split = labels.split(",");
+		double[] values = new double[split.length];
+		double[] averages = new double[split.length];
 		for (RentProperty p : getProperties()) {
 			if (p.getLoc_vancouver() == 1) {
 				values[0] += 1;
@@ -110,6 +114,9 @@ public class DataAnalysisDAO implements Serializable {
 			} else if (p.getLoc_abbotsford() == 1) {
 				values[5] += 1;
 				averages[5] += p.getPrice();
+			} else if (p.getLoc_other() == 1) {
+				values[6] += 1;
+				averages[6] += p.getPrice();
 			}
 		}
 
@@ -141,16 +148,12 @@ public class DataAnalysisDAO implements Serializable {
 	}
 
 	public void populateDataSizeWithValue() {
-		Document priceValueFilter = new Document("$gt", 0);
-		Document query = new Document("price", priceValueFilter);
-		dataSizeWithValue = ResourcesDAO.getCollectionProperty().countDocuments(query);
+		dataSizeWithValue = ResourcesDAO.getCollectionProperty().countDocuments(queryValueFilter);
 	}
 
 	public void populateListProperties() {
 		properties = new ArrayList<>();
-		Document priceValueFilter = new Document("$gt", 0);
-		Document query = new Document("price", priceValueFilter);
-		ResourcesDAO.getCollectionProperty().find(query).into(properties);
+		ResourcesDAO.getCollectionProperty().find(queryValueFilter).into(properties);
 	}
 
 	/**
