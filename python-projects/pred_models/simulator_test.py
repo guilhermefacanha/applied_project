@@ -33,7 +33,7 @@ data = {'price':[2400.0],
  
 # Create DataFrame
 record = pd.DataFrame(data)
-record['size_sqft_lg'] = np.log10(dataset['size_sqft'])
+record['size_sqft_lg'] = np.log10(record['size_sqft'])
  
 # Print the output.
 print(record.to_json(orient='index'))
